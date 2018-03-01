@@ -1,0 +1,115 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.max</groupId>
+    <artifactId>uva</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit4.version>4.12</junit4.version>
+        <surfire.plugin.version>2.20.1</surfire.plugin.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- Java compile plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <executable>$(/usr/libexec/java_home -v 1.8)/bin/javac</executable>
+                    <fork>true</fork>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+
+        <!-- run only unit tests -->
+        <profile>
+            <id>normal</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${surfire.plugin.version}</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/**/*ExhaustiveTest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <!-- run unit tests and exhaustive -->
+        <profile>
+            <id>exhaustive</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${surfire.plugin.version}</version>
+                        <configuration>
+                            <forkMode>once</forkMode>
+                            <includes>
+                                <include>**/**/*Test.java</include>
+                                <include>**/**/*ExhaustiveTest.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <activation>
+                <property>
+                    <name>exhaustive</name>
+                </property>
+            </activation>
+        </profile>
+
+
+    </profiles>
+
+    <dependencies>
+
+        <!-- junit 4 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>sonatype-nexus-public</id>
+            <name>SonaType public snapshots and releases repository</name>
+            <url>https://oss.sonatype.org/content/groups/public</url>
+            <releases>
+                <!-- set end true if you wish end fetch releases start this repo too. -->
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>
