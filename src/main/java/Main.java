@@ -1,36 +1,104 @@
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 /**
- * 
+ * 11727 - Cost Cutting
  */
 public class Main {
 
+    private static boolean DEBUG;
 
-    private Main(boolean debugMode) throws IOException {
+    private Main() throws Exception {
 
-        InputStream in = System.in;
-
-        if (debugMode) {
-            in = Files.newInputStream(Paths.get("/Users/mstepan/repo/uva-online-judge/src/main/java/in.txt"));
-        }
+        InputStream in = createInput();
+        PrintStream out = createOutput();
 
         try (Scanner sc = new Scanner(in)) {
 
+            final int testsCount = sc.nextInt();
 
+            for (int i = 0; i < testsCount; ++i) {
+                int[] arr = new int[3];
+                for (int k = 0; k < arr.length; ++k) {
+                    arr[k] = sc.nextInt();
+                }
+
+                Arrays.sort(arr);
+
+                out.printf("Case %d: %d%n", i + 1, arr[1]);
+            }
         }
+
+        diff();
     }
 
+    private static InputStream createInput() throws IOException {
+        if (DEBUG) {
+            return Files.newInputStream(Paths.get("/Users/mstepan/repo/uva-online-judge/src/main/java/in.txt"));
+        }
+        return System.in;
+    }
+
+    private static PrintStream createOutput() throws IOException {
+        if (DEBUG) {
+            return new PrintStream(Files.newOutputStream(
+                    Paths.get("/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt")));
+        }
+        return System.out;
+    }
+
+    private static void diff() throws IOException, InterruptedException {
+
+        if (!DEBUG) {
+            return;
+        }
+
+        Process process = Runtime.getRuntime()
+                .exec(String.format("/usr/bin/diff %s %s",
+                        "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
+                        "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
+
+        StreamGobbler streamGobbler =
+                new StreamGobbler(process.getInputStream(), System.out::println);
+
+        Thread th = new Thread(streamGobbler);
+        th.start();
+        th.join();
+    }
 
     public static void main(String[] args) {
         try {
-            new Main(args.length == 1);
+            DEBUG = (args.length == 1);
+            new Main();
         }
         catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private static class StreamGobbler implements Runnable {
+
+        private InputStream inputStream;
+
+        private Consumer<String> consumer;
+
+
+        public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
+            this.inputStream = inputStream;
+            this.consumer = consumer;
+        }
+
+        @Override
+        public void run() {
+            new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
         }
     }
 
