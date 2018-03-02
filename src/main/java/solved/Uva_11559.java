@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,20 +11,45 @@ import java.util.Scanner;
 import java.util.function.Consumer;
 
 /**
- *
+ * 11559 - Event Planning
  */
-public class Main {
+public class Uva_11559 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_11559() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (Scanner sc = new Scanner(in)) {
-            
 
-            diff();
+            while (sc.hasNext()) {
+
+                int participants = sc.nextInt();
+                int budget = sc.nextInt();
+                int hotelsCount = sc.nextInt();
+                int weeksCount = sc.nextInt();
+
+                int minSoFar = Integer.MAX_VALUE;
+
+                for (int i = 0; i < hotelsCount; ++i) {
+
+                    int price = sc.nextInt();
+
+                    for (int k = 0; k < weeksCount; ++k) {
+                        int bedsCount = sc.nextInt();
+
+                        if (bedsCount >= participants && participants * price <= budget) {
+                            minSoFar = Math.min(minSoFar, participants * price);
+                        }
+                    }
+                }
+
+                out.println(minSoFar == Integer.MAX_VALUE ? "stay home" : minSoFar);
+            }
+
         }
+
+        diff();
     }
 
 
@@ -65,13 +92,15 @@ public class Main {
         th.start();
         th.join();
 
-        process.waitFor();
+        int returnCode = process.waitFor();
+
+        assert returnCode == 0;
     }
 
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_11559();
         }
         catch (Exception ex) {
             ex.printStackTrace();
