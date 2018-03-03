@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,22 +10,96 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- *
+ * 11221 - Magic square palindromes.
  */
-public class Main {
+public class Uva_11221 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_11221() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
+            final int sentencesCnt = Integer.parseInt(rd.readLine());
+
+            for (int i = 0; i < sentencesCnt; ++i) {
+
+                String str = onlyCharacters(rd.readLine().trim().toLowerCase());
+
+                out.printf("Case #%d:%n", i + 1);
+
+                final int size = squarePalindromeLength(str);
+
+                out.println(size == -1 ? "No magic :(" : size);
+            }
 
             diff();
         }
     }
 
+    private static int squarePalindromeLength(String str) {
+        if (!isPerfectSquare(str.length())) {
+            return -1;
+        }
+
+        if (!isPalindrome(str)) {
+            return -1;
+        }
+
+        int size = (int) Math.sqrt(str.length());
+
+        StringBuilder bufByColumn = new StringBuilder(str.length());
+
+        for (int column = 0; column < size; ++column) {
+            for (int row = column; row < str.length(); row += size) {
+                bufByColumn.append(str.charAt(row));
+            }
+        }
+
+        String columnStr = bufByColumn.toString();
+
+        if (!isPalindrome(columnStr)) {
+            return -1;
+        }
+
+        return size;
+    }
+
+    private static boolean isPalindrome(String str) {
+
+        int left = 0;
+        int right = str.length() - 1;
+
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            ++left;
+            --right;
+        }
+
+        return true;
+    }
+
+    private static String onlyCharacters(String base) {
+        StringBuilder res = new StringBuilder();
+
+        for (int i = 0; i < base.length(); ++i) {
+            char ch = base.charAt(i);
+
+            if (ch >= 'a' && ch <= 'z') {
+                res.append(ch);
+            }
+        }
+
+        return res.toString();
+    }
+
+    private static boolean isPerfectSquare(int value) {
+        int sqrt = (int) Math.sqrt(value);
+        return sqrt * sqrt == value;
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
@@ -70,7 +146,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_11221();
         }
         catch (Exception ex) {
             ex.printStackTrace();

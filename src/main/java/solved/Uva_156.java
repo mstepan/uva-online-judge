@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -5,25 +7,87 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- *
+ * 156 - Ananagrams
  */
-public class Main {
+public class Uva_156 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_156() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
+            Map<String, List<String>> anagrams = new HashMap<>();
+
+            Set<String> singleChars = new HashSet<>();
+
+            while (true) {
+
+                String line = rd.readLine().trim();
+
+                if ("#".equals(line)) {
+                    break;
+                }
+
+                String[] words = line.split("\\s+");
+
+                for (String singleWord : words) {
+
+                    if( singleWord.length() == 1 ){
+                        singleChars.add(singleWord);
+                    }
+                    else {
+                        String key = computeKey(singleWord);
+                        anagrams.compute(key, (key1, listValue) -> {
+
+                            List<String> bucket = listValue;
+
+                            if (bucket == null) {
+                                bucket = new ArrayList<>();
+                            }
+
+                            bucket.add(singleWord);
+                            return bucket;
+                        });
+                    }
+                }
+            }
+
+            List<String> ananagrams = new ArrayList<>(singleChars);
+
+            for (Map.Entry<String, List<String>> entry : anagrams.entrySet()) {
+                if (entry.getValue().size() == 1) {
+                    ananagrams.add(entry.getValue().get(0));
+                }
+            }
+
+            Collections.sort(ananagrams);
+
+            for (String outWord : ananagrams) {
+                out.println(outWord);
+            }
 
             diff();
         }
     }
 
+    private static String computeKey(String word) {
+        char[] arr = word.toLowerCase().toCharArray();
+        Arrays.sort(arr);
+        return new String(arr);
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
@@ -70,7 +134,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_156();
         }
         catch (Exception ex) {
             ex.printStackTrace();

@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -5,23 +7,67 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Scanner;
 import java.util.function.Consumer;
 
 /**
- *
+ * 10945 - Mother bear
  */
-public class Main {
+public class Uva_10945 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_10945() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
-        try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
+        try (Scanner sc = new Scanner(in)) {
 
+            while (true) {
+                String sentence = sc.nextLine().trim();
+
+                if ("DONE".equals(sentence)) {
+                    break;
+                }
+
+                sentence = sentence.toLowerCase();
+
+                if (isPalindromicSentence(sentence)) {
+                    out.println("You won't be eaten!");
+                }
+                else {
+                    out.println("Uh oh..");
+                }
+            }
 
             diff();
         }
+    }
+
+    private static boolean isPalindromicSentence(String sentence) {
+
+        char[] arr = sentence.toCharArray();
+        int left = 0;
+        int right = arr.length - 1;
+
+        while (left < right) {
+            if ( arr[left] < 'a' || arr[left] > 'z') {
+                ++left;
+            }
+            else if (arr[right] < 'a' || arr[right] > 'z') {
+                --right;
+            }
+            else {
+
+                if (arr[left] != arr[right]) {
+                    return false;
+                }
+
+                ++left;
+                --right;
+            }
+        }
+
+        return true;
     }
 
 
@@ -70,7 +116,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_10945();
         }
         catch (Exception ex) {
             ex.printStackTrace();
