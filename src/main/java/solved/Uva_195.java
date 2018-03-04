@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -5,22 +7,81 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 /**
- *
+ * 195 - Anagram
  */
-public class Main {
+public class Uva_195 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_195() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
+            final int wordsCount = Integer.parseInt(rd.readLine());
+
+            for (int i = 0; i < wordsCount; ++i) {
+                String word = rd.readLine().trim();
+                printAllPermutations(out, word);
+            }
+
             diff();
         }
+    }
+
+    private static void printAllPermutations(PrintStream out, String word) {
+
+        Character[] arr = new Character[word.length()];
+
+        for (int i = 0; i < word.length(); ++i) {
+            arr[i] = word.charAt(i);
+        }
+
+        Arrays.sort(arr, (ch1, ch2) -> {
+
+            Character lowerCh1 = Character.toLowerCase(ch1);
+            Character lowerCh2 = Character.toLowerCase(ch2);
+
+            int cmp = lowerCh1.compareTo(lowerCh2);
+
+            if (cmp != 0) {
+                return cmp;
+            }
+
+            return Character.compare(ch1, ch2);
+        });
+
+        printRec(out, arr, new boolean[arr.length], new StringBuilder());
+    }
+
+    private static void printRec(PrintStream out, Character[] arr, boolean[] used, StringBuilder res) {
+
+        if (res.length() == arr.length) {
+            out.println(res);
+            return;
+        }
+
+        char prev = ' ';
+        for (int i = 0; i < arr.length; ++i) {
+
+            if (!used[i] && prev != arr[i]) {
+
+                prev = arr[i];
+
+                res.append(arr[i]);
+                used[i] = true;
+
+                printRec(out, arr, used, res);
+
+                used[i] = false;
+                res.deleteCharAt(res.length() - 1);
+            }
+        }
+
     }
 
 
@@ -69,7 +130,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_195();
         }
         catch (Exception ex) {
             ex.printStackTrace();
