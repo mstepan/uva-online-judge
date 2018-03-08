@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,21 +10,65 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- *
+ *  11173 - Grey Codes
  */
-public class Main {
+public class Uva_11173 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_11173() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            final int testsCount = Integer.parseInt(rd.readLine());
+
+            for (int i = 0; i < testsCount; ++i) {
+                String[] lineData = rd.readLine().split("\\s+");
+
+                int bits = Integer.parseInt(lineData[0]);
+                int index = Integer.parseInt(lineData[1]);
+
+                out.println(greyCode(index, bits));
+            }
+
+            while (true) {
+                String line = rd.readLine();
+
+                if (line == null) {
+                    break;
+                }
+
+                int index = Integer.parseInt(line);
+                out.println(greyCode(index, 5));
+            }
 
             diff();
         }
+    }
+
+    private static int greyCode(int index, int bits) {
+
+        if (index < 2) {
+            return index;
+        }
+
+        int mod = 1 << (bits - 1);
+        int value = 0;
+        int k = index;
+
+        while (mod != 0) {
+            int digit = (k & mod) == 0 ? 0 : 1;
+            value = (value << 1) | digit;
+
+            if (digit == 1) {
+                int offset = k - mod;
+                k = (mod - 1) - offset;
+            }
+            mod >>= 1;
+        }
+
+        return value;
     }
 
 
@@ -71,7 +117,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_11173();
         }
         catch (Exception ex) {
             ex.printStackTrace();
