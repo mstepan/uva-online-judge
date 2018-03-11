@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,21 +10,89 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- *
+ * 146 - ID Codes
  */
-public class Main {
+public class Uva_146 {
 
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_146() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            while (true) {
+                String line = rd.readLine().trim();
+
+                if ("#".equals(line)) {
+                    break;
+                }
+
+                String next = nextValue(line);
+
+                if (next == null) {
+                    out.println("No Successor");
+                }
+                else {
+                    out.println(next);
+                }
+            }
 
             diff();
+        }
+    }
+
+
+    private static String nextValue(String value) {
+
+        char[] arr = value.toCharArray();
+
+        int i = arr.length - 2;
+
+        while (i >= 0) {
+
+            if (arr[i] < arr[i + 1]) {
+
+                int index = findFirstBiggestIndexFromEnd(arr[i], arr, i + 1);
+
+                swap(arr, i, index);
+                reverse(arr, i + 1, arr.length - 1);
+
+                break;
+            }
+
+            --i;
+        }
+
+
+        return i < 0 ? null : new String(arr);
+    }
+
+    private static int findFirstBiggestIndexFromEnd(char ch, char[] arr, int boundary) {
+
+        for (int i = arr.length - 1; i >= boundary; --i) {
+            if (arr[i] > ch) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private static void swap(char[] arr, int from, int to) {
+        char temp = arr[from];
+        arr[from] = arr[to];
+        arr[to] = temp;
+    }
+
+    private static void reverse(char[] arr, int from, int to) {
+        int left = from;
+        int right = to;
+        while (left < right) {
+            swap(arr, left, right);
+            ++left;
+            --right;
         }
     }
 
@@ -71,7 +141,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_146();
         }
         catch (Exception ex) {
             ex.printStackTrace();
