@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,20 +10,39 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- * 
+ * 10264 - The Most Potent Corner
  */
-public class Main {
+public class Uva_10264 {
 
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_10264() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            while (true) {
+                String line = rd.readLine();
 
+                if (line == null) {
+                    break;
+                }
+
+                line = line.trim();
+
+                final int dimensions = Integer.parseInt(line);
+
+                int[] cornerWeights = new int[1 << dimensions];
+
+                for (int i = 0; i < cornerWeights.length; ++i) {
+                    cornerWeights[i] = Integer.parseInt(rd.readLine().trim());
+                }
+
+                int[] potentials = calculatePotentials(cornerWeights, dimensions);
+
+                out.printf("%d%n", biggestSumOfTwoNeighbourPotentials(potentials, dimensions));
+            }
             diff();
         }
     }
@@ -117,7 +138,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_10264();
         }
         catch (Exception ex) {
             ex.printStackTrace();
