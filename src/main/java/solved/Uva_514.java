@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -5,27 +7,90 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.function.Consumer;
 
 /**
- *
+ * 514 - Rails
  */
-public class Main {
+public class Uva_514 {
 
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_514() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            while (true) {
+
+                final int cnt = Integer.parseInt(rd.readLine().trim());
+
+                if (cnt == 0) {
+                    break;
+                }
+
+                while (true) {
+                    String line = rd.readLine().trim();
+
+                    if ("0".equals(line)) {
+                        break;
+                    }
+
+                    int[] train = createTrain(line);
+
+                    if (canReshuffle(train, cnt)) {
+                        out.println("Yes");
+                    }
+                    else {
+                        out.println("No");
+                    }
+                }
+
+                out.println();
+            }
 
             diff();
         }
     }
 
+    private static boolean canReshuffle(int[] train, int cnt) {
+
+        Deque<Integer> stack = new ArrayDeque<>();
+        int cur = 1;
+
+        for (int i = 0; i < train.length; ) {
+            if (stack.isEmpty() || stack.peekFirst() != train[i]) {
+
+                if (cur > cnt) {
+                    return false;
+                }
+
+                stack.push(cur);
+                ++cur;
+            }
+            else {
+                stack.pop();
+                ++i;
+            }
+        }
+
+        return true;
+    }
+
+    private static int[] createTrain(String trainStr) {
+        String[] trainData = trainStr.split("\\s+");
+
+        int[] train = new int[trainData.length];
+
+        for (int i = 0; i < trainData.length; ++i) {
+            train[i] = Integer.parseInt(trainData[i]);
+        }
+
+        return train;
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
@@ -72,7 +137,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_514();
         }
         catch (Exception ex) {
             ex.printStackTrace();

@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -5,27 +7,109 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
- *
+ * 732 - Anagrams by Stack
  */
-public class Main {
+public class Uva_732 {
 
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_732() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            while (true) {
+                String str = rd.readLine();
+
+                if (str == null) {
+                    break;
+                }
+
+                str = str.trim();
+                String other = rd.readLine().trim();
+
+                out.println("[");
+
+                List<String> sequences = calculatePossibleTransformations(str, other);
+                Collections.sort(sequences);
+
+                for (String singleSeq : sequences) {
+                    out.println(singleSeq);
+                }
+
+                out.println("]");
+            }
 
             diff();
         }
     }
 
+    private static List<String> calculatePossibleTransformations(String first, String second) {
+
+        if (first.length() != second.length()) {
+            return Collections.emptyList();
+        }
+
+        List<String> results = new ArrayList<>();
+
+        calcRec(first.toCharArray(), 0, second.toCharArray(), 0, new ArrayDeque<>(), new ArrayDeque<>(),
+                results);
+
+        return results;
+    }
+
+    private static void calcRec(char[] first, int i, char[] second, int j, Deque<Character> stack,
+                                Deque<String> ops, List<String> results) {
+
+        if (stack.isEmpty() && i == first.length) {
+            results.add(combineResult(ops));
+            return;
+        }
+
+        if (!stack.isEmpty() && stack.peekFirst() == second[j]) {
+
+            final char stackCh = stack.pop();
+            ops.push("o");
+
+            calcRec(first, i, second, j + 1, stack, ops, results);
+
+            ops.pop();
+            stack.push(stackCh);
+        }
+
+
+        if (i < first.length) {
+            stack.push(first[i]);
+            ops.push("i");
+
+            calcRec(first, i + 1, second, j, stack, ops, results);
+
+            stack.pop();
+            ops.pop();
+        }
+    }
+
+    private static String combineResult(Deque<String> ops) {
+        StringBuilder buf = new StringBuilder();
+
+        Iterator<String> revIt = ops.descendingIterator();
+
+        while (revIt.hasNext()) {
+            buf.append(revIt.next()).append(" ");
+        }
+
+        return buf.toString().trim();
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
@@ -72,7 +156,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_732();
         }
         catch (Exception ex) {
             ex.printStackTrace();

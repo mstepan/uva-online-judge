@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -5,27 +7,86 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Deque;
+import java.util.Iterator;
 import java.util.function.Consumer;
 
 /**
- *
+ * 11849 - CD
  */
-public class Main {
+public class Uva_11849 {
 
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_11849() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            while (true) {
+                String[] data = rd.readLine().trim().split("\\s+");
+
+                int n = Integer.parseInt(data[0]);
+                int m = Integer.parseInt(data[1]);
+
+                if (n == 0 && m == 0) {
+                    break;
+                }
+
+                int[] first = new int[n];
+                for (int i = 0; i < n; ++i) {
+                    first[i] = Integer.parseInt(rd.readLine().trim());
+                }
+
+                int[] second = new int[m];
+                for (int i = 0; i < m; ++i) {
+                    second[i] = Integer.parseInt(rd.readLine().trim());
+                }
+
+                out.println(intersectionCount(first, second));
+            }
 
             diff();
         }
     }
 
+    private static int intersectionCount(int[] first, int[] second) {
+
+        int i = 0;
+        int j = 0;
+
+        int cnt = 0;
+
+        while (i < first.length && j < second.length) {
+
+            if (first[i] == second[j]) {
+                ++cnt;
+                ++i;
+                ++j;
+            }
+            else if (first[i] < second[j]) {
+                ++i;
+            }
+            else {
+                ++j;
+            }
+
+        }
+        return cnt;
+    }
+
+    private static String combineResult(Deque<String> ops) {
+        StringBuilder buf = new StringBuilder();
+
+        Iterator<String> revIt = ops.descendingIterator();
+
+        while (revIt.hasNext()) {
+            buf.append(revIt.next()).append(" ");
+        }
+
+        return buf.toString().trim();
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
@@ -72,7 +133,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_11849();
         }
         catch (Exception ex) {
             ex.printStackTrace();
