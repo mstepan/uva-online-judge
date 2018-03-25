@@ -1,4 +1,4 @@
-
+package solved;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,23 +7,68 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- *
+ * 11991 - Easy Problem from Rujia Liu?
  */
-public class Main {
+public class Uva_11991 {
 
     private static final String LINE_SEP = System.getProperty("line.separator");
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_11991() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            while (true) {
+
+                String line = rd.readLine();
+
+                if (line == null) {
+                    break;
+                }
+
+                String[] lengthAndQueries = line.trim().split("\\s+");
+
+                final int length = Integer.parseInt(lengthAndQueries[0]);
+                final int queriesCnt = Integer.parseInt(lengthAndQueries[1]);
+                String[] numbers = rd.readLine().trim().split("\\s+");
+
+                Map<Integer, List<Integer>> elemsLocations = new HashMap<>();
+
+                for (int i = 0; i < length; ++i) {
+                    int value = Integer.parseInt(numbers[i]);
+                    elemsLocations.computeIfAbsent(value, unused -> new ArrayList<>()).add(i);
+                }
+
+                StringBuilder outRes = new StringBuilder(3 * queriesCnt);
+
+                for (int q = 0; q < queriesCnt; ++q) {
+                    String[] data = rd.readLine().trim().split("\\s+");
+
+                    int order = Integer.parseInt(data[0]);
+                    int value = Integer.parseInt(data[1]);
+
+                    List<Integer> positionsList = elemsLocations.get(value);
+
+                    if (positionsList == null || positionsList.size() < order) {
+                        outRes.append("0").append(LINE_SEP);
+                    }
+                    else {
+                        outRes.append(String.valueOf(positionsList.get(order - 1) + 1)).append(LINE_SEP);
+                    }
+                }
+
+                out.print(outRes);
+                out.flush();
+            }
 
             diff();
         }
@@ -58,7 +103,7 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(java.lang.String.format("/usr/bin/diff %s %s",
+                .exec(String.format("/usr/bin/diff %s %s",
                         "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
                         "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
@@ -75,7 +120,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_11991();
         }
         catch (Exception ex) {
             ex.printStackTrace();
