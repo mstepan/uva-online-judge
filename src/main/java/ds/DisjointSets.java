@@ -13,6 +13,12 @@ public final class DisjointSets<T> {
 
     private int size;
 
+    private int setsCount;
+
+    public int setsCount(){
+        return setsCount;
+    }
+
     /**
      * time: O(1) amortized
      */
@@ -54,6 +60,7 @@ public final class DisjointSets<T> {
         }
 
         --size;
+        --setsCount;
 
         return true;
     }
@@ -70,6 +77,7 @@ public final class DisjointSets<T> {
         setSize.put(value, 1);
 
         ++size;
+        ++setsCount;
     }
 
     /**

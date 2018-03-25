@@ -1,3 +1,5 @@
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +14,6 @@ import java.util.function.Consumer;
  */
 public class Main {
 
-
     private Main() throws IOException, InterruptedException {
 
         InputStream in = createInput();
@@ -25,7 +26,6 @@ public class Main {
             diff();
         }
     }
-
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
@@ -55,7 +55,7 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(String.format("/usr/bin/diff %s %s",
+                .exec(java.lang.String.format("/usr/bin/diff %s %s",
                         "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
                         "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
