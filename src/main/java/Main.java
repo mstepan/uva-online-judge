@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- * 10976 - Fractions Again?!
+ *
  */
 public class Main {
 
