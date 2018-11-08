@@ -14,21 +14,21 @@ public class Main {
 
     private Main() throws IOException, InterruptedException {
 
+        int testCnt = 0;
+
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            final int testCases = Integer.parseInt(rd.readLine().trim());
+            //TODO:
 
-            for (int i = 0; i < testCases; ++i) {
-                //TODO:
-            }
 
             diff();
         }
     }
-    
+
+
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
     //------------------------------------------------------------------------------------------------------------------
