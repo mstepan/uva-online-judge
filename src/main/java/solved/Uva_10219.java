@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,10 +13,9 @@ import java.util.function.Consumer;
 /**
  * UVA-10219: Find the ways !
  */
-public class Main {
+public class Uva_10219 {
 
-
-    private Main() throws IOException, InterruptedException {
+    private Uva_10219() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
@@ -30,18 +31,24 @@ public class Main {
                 int n = Integer.parseInt(data[0]);
                 int k = Integer.parseInt(data[1]);
 
-//                long starTime = System.currentTimeMillis();
                 out.println(combinationsCnt2(n, k).toString().length());
-//                long endTime = System.currentTimeMillis();
-
-
-//                System.out.println("time: " + (endTime - starTime) + " ms");
 
                 line = rd.readLine();
             }
 
             diff();
         }
+    }
+
+    private static BigInteger combinationsCnt2(int n, int k) {
+
+        int diff = n - k;
+
+        if (diff > k) {
+            return fac(diff + 1, n).divide(fac(k));
+        }
+
+        return fac(k + 1, n).divide(fac(diff));
     }
 
     private static BigInteger fac(int value) {
@@ -58,44 +65,6 @@ public class Main {
 
         return res;
     }
-
-    private static BigInteger combinationsCnt2(int n, int k) {
-
-        int diff = n - k;
-
-        if (diff > k) {
-            return fac(diff + 1, n).divide(fac(k));
-        }
-
-        return fac(k + 1, n).divide(fac(diff));
-    }
-
-//    private static BigInteger combinationsCnt(int n, int k) {
-//
-//        final int cols = k + 1;
-//
-//        BigInteger[] prev = new BigInteger[cols];
-//        prev[0] = BigInteger.ONE;
-//
-//        for (int i = 0; i < prev.length; ++i) {
-//            prev[i] = BigInteger.ZERO;
-//        }
-//
-//        for (int row = 1; row <= n; ++row) {
-//
-//            BigInteger[] cur = new BigInteger[cols];
-//            cur[0] = BigInteger.ONE;
-//
-//            for (int col = 1; col < cols; ++col) {
-//                cur[col] = prev[col].add(prev[col - 1]);
-//            }
-//
-//            prev = cur;
-//        }
-//
-//        return prev[cols - 1];
-//    }
-
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
@@ -125,7 +94,7 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(java.lang.String.format("/usr/bin/diff %s %s",
+                .exec(String.format("/usr/bin/diff %s %s",
                         "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
                         "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
@@ -142,7 +111,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_10219();
         }
         catch (Exception ex) {
             ex.printStackTrace();
