@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,23 +10,55 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- *
+ * UVA-10176: Ocean Deep! - Make it shallow!!
  */
-public class Main {
+public class Uva_10176 {
 
-    private Main() throws IOException, InterruptedException {
+
+    private Uva_10176() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            String line = rd.readLine().trim();
+            final int mod = 131_071;
 
-            //TODO:
+            String line = rd.readLine();
+            StringBuilder binaryValue = new StringBuilder();
+
+            while (line != null) {
+
+                binaryValue.append(line.trim());
+
+                if (binaryValue.charAt(binaryValue.length() - 1) == '#') {
+                    if (binaryStringMod(binaryValue.substring(0, binaryValue.length() - 1), mod) == 0) {
+                        out.println("YES");
+                    }
+                    else {
+                        out.println("NO");
+                    }
+
+                    binaryValue.setLength(0);
+                }
+
+                line = rd.readLine();
+            }
 
             diff();
         }
+    }
+
+    private static int binaryStringMod(String value, int mod) {
+        int res = 0;
+
+        for (int i = 0; i < value.length(); ++i) {
+            int digit = value.charAt(i) - '0';
+
+            res = ((res << 1) | digit) % mod;
+        }
+
+        return res;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -55,7 +89,7 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(java.lang.String.format("/usr/bin/diff %s %s",
+                .exec(String.format("/usr/bin/diff %s %s",
                         "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
                         "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
@@ -72,7 +106,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_10176();
         }
         catch (Exception ex) {
             ex.printStackTrace();

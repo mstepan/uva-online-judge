@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -5,26 +7,110 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.BitSet;
 import java.util.function.Consumer;
 
 /**
- *
+ * UVA-543: Goldbach's Conjecture
  */
-public class Main {
+public class Uva_543 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_543() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
+
+        int[] allPrimes = calculateAllPrimes(1_000_000);
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
             String line = rd.readLine().trim();
 
-            //TODO:
+            while (true) {
+                int value = Integer.parseInt(line);
+
+                if (value == 0) {
+                    break;
+                }
+
+                int[] primeValues = findGoldbachValues(allPrimes, value);
+
+                if (primeValues.length == 0) {
+                    out.println("Goldbach's conjecture is wrong.");
+                }
+                else {
+                    out.println(value + " = " + primeValues[0] + " + " + primeValues[1]);
+                }
+
+                line = rd.readLine().trim();
+            }
 
             diff();
         }
+    }
+
+    private int[] findGoldbachValues(int[] primes, int value) {
+
+        int from = 0;
+        int to = value >= primes[primes.length - 1] ? primes.length - 1 : findFirstBiggerValue(primes, value) - 1;
+
+        while (from <= to) {
+            int curSum = primes[from] + primes[to];
+
+            if (curSum == value) {
+                return new int[]{primes[from], primes[to]};
+            }
+
+            if (curSum < value) {
+                ++from;
+            }
+            else {
+                --to;
+            }
+        }
+
+        return new int[0];
+    }
+
+    private int findFirstBiggerValue(int[] arr, int value) {
+
+        int from = 0;
+        int to = arr.length - 1;
+
+        while (from <= to) {
+            int mid = from + (to - from) / 2;
+
+            if (arr[mid] <= value) {
+                from = mid + 1;
+            }
+            else {
+                to = mid - 1;
+            }
+
+        }
+
+        return from;
+    }
+
+    private static int[] calculateAllPrimes(int maxValue) {
+
+        BitSet sieve = new BitSet(maxValue + 1);
+        sieve.set(2, maxValue, true);
+
+        for (int p = sieve.nextSetBit(0); p != -1 && p * p <= maxValue; p = sieve.nextSetBit(p + 1)) {
+
+            for (int val = p * p; val <= maxValue; val += p) {
+                sieve.clear(val);
+            }
+        }
+
+        int[] primes = new int[sieve.cardinality()];
+
+        for (int i = 0, index = sieve.nextSetBit(2); i < primes.length; ++i, index = sieve.nextSetBit(index + 1)) {
+            primes[i] = index;
+        }
+
+        return primes;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -55,7 +141,7 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(java.lang.String.format("/usr/bin/diff %s %s",
+                .exec(String.format("/usr/bin/diff %s %s",
                         "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
                         "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
@@ -72,7 +158,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_543();
         }
         catch (Exception ex) {
             ex.printStackTrace();
