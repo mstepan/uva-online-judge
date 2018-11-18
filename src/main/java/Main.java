@@ -5,12 +5,10 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.BitSet;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * UVA-10140: Prime Distance
+ * Profile usage:
  * <p>
  * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,file=/Users/mstepan/repo/uva-online-judge/src/main/java/uva-profile.svg,event=cpu
  */
@@ -23,33 +21,11 @@ public class Main {
 
         long startTime = System.currentTimeMillis();
 
-        final BitSet basePrimes = sievePrimesOfSquareOptimized(((int) Math.sqrt(2_147_483_647)) + 1);
-
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
             String line = rd.readLine();
 
-            while (line != null) {
-
-                String[] data = line.trim().split("\\s+");
-
-                int lo = Integer.parseInt(data[0]);
-                int hi = Integer.parseInt(data[1]);
-
-                Optional<MinAndMax> minMax = calculateMinAndMaxPairOfPrimes(lo, hi, basePrimes);
-
-                if (minMax.isPresent()) {
-                    out.printf("%d,%d are closest, %d,%d are most distant.%n",
-                            minMax.get().min.first, minMax.get().min.second,
-                            minMax.get().max.first, minMax.get().max.second);
-                }
-                else {
-                    out.println("There are no adjacent primes.");
-                }
-
-
-                line = rd.readLine();
-            }
+            //TODO:
 
             long endTime = System.currentTimeMillis();
 
@@ -59,123 +35,6 @@ public class Main {
         }
     }
 
-    private static Optional<MinAndMax> calculateMinAndMaxPairOfPrimes(int lo, int hi, BitSet basePrimes) {
-
-        BitSet primesInRange = findPrimesInRange(lo, hi, basePrimes);
-
-        if (primesInRange.cardinality() < 2) {
-            return Optional.empty();
-        }
-
-        PrimesPair minPair = null;
-        int minDiff = Integer.MAX_VALUE;
-
-        PrimesPair maxPair = null;
-        int maxDiff = Integer.MIN_VALUE;
-
-        final int index = primesInRange.nextSetBit(0);
-        int prev = index + lo;
-
-        for (int p = primesInRange.nextSetBit(index + 1); p > 0; p = primesInRange.nextSetBit(p + 1)) {
-
-            int cur = p + lo;
-
-            int curDiff = cur - prev;
-
-            if (curDiff < minDiff) {
-                minPair = new PrimesPair(prev, cur);
-                minDiff = curDiff;
-            }
-
-            if (curDiff > maxDiff) {
-                maxPair = new PrimesPair(prev, cur);
-                maxDiff = curDiff;
-            }
-
-            prev = cur;
-        }
-
-        assert minPair != null : "null minPair detected";
-        assert maxPair != null : "null maxPair detected";
-
-        return Optional.of(new MinAndMax(minPair, maxPair));
-    }
-
-    private static BitSet findPrimesInRange(int lo, int hi, BitSet primes) {
-
-        if (lo == Integer.MAX_VALUE) {
-            BitSet one = new BitSet(1);
-            one.set(0);
-            return one;
-        }
-
-        final int rangeLength = hi - lo + 1;
-        BitSet sieveForRange = new BitSet(rangeLength);
-
-        sieveForRange.set(0, rangeLength);
-        if (lo == 1) {
-            sieveForRange.clear(0);
-        }
-
-        for (int p = primes.nextSetBit(2); p > 0 && p * p <= hi; p = primes.nextSetBit(p + 1)) {
-
-            int from = (int) (Math.ceil((double) lo / p));
-
-            if (from == 1) {
-                from = 2;
-            }
-
-            for (int val = from * p; val <= hi; val += p) {
-
-                int composite = val - lo;
-
-                if (composite < 0) {
-                    break;
-                }
-
-                sieveForRange.clear(composite);
-            }
-        }
-
-        return sieveForRange;
-
-    }
-
-    private static BitSet sievePrimesOfSquareOptimized(int value) {
-
-        final int squareOfUpper = ((int) Math.sqrt(value)) + 1;
-
-        BitSet primes = new BitSet(value + 1);
-        primes.set(2, value + 1);
-
-        for (int p = primes.nextSetBit(2); p >= 0 && p <= squareOfUpper; p = primes.nextSetBit(p + 1)) {
-            for (int composite = p * p; composite <= value; composite += p) {
-                primes.clear(composite);
-            }
-        }
-
-        return primes;
-    }
-
-    private static final class PrimesPair {
-        final int first;
-        final int second;
-
-        PrimesPair(int first, int second) {
-            this.first = first;
-            this.second = second;
-        }
-    }
-
-    private static final class MinAndMax {
-        final PrimesPair min;
-        final PrimesPair max;
-
-        MinAndMax(PrimesPair min, PrimesPair max) {
-            this.min = min;
-            this.max = max;
-        }
-    }
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
