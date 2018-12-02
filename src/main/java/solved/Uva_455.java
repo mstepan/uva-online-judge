@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,8 +10,8 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- * Uva
- * <p>
+ * Uva-455:  Periodic Strings
+ *
  * https://uva.onlinejudge.org
  * <p>
  * Profile usage:
@@ -17,9 +19,9 @@ import java.util.function.Consumer;
  * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,
  * file=/Users/mstepan/repo/uva-online-judge/src/main/java/uva-profile.svg,event=cpu
  */
-public class Main {
+public class Uva_455 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_455() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
@@ -28,9 +30,47 @@ public class Main {
 
             final int testCases = Integer.parseInt(rd.readLine().trim());
 
+            for (int i = 0; i < testCases; ++i) {
+
+                // skip empty line
+                rd.readLine();
+
+                if( i != 0 ){
+                    out.println();
+                }
+
+                out.println(findSmallestPeriod(rd.readLine().trim().toCharArray()));
+            }
 
             diff();
         }
+    }
+
+    private int findSmallestPeriod(char[] arr) {
+
+        for (int periodLength = 1; periodLength < (arr.length / 2) + 1; ++periodLength) {
+
+            if ((arr.length % periodLength == 0) && isCorrectPeriod(arr, periodLength)) {
+                return periodLength;
+            }
+        }
+
+
+        return arr.length;
+    }
+
+    private static boolean isCorrectPeriod(char[] arr, int periodLength) {
+
+        for (int baseIndex = 0; baseIndex < periodLength; ++baseIndex) {
+
+            for (int other = baseIndex + periodLength; other < arr.length; other += periodLength) {
+                if (arr[baseIndex] != arr[other]) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 
@@ -62,9 +102,9 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                              "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
-                                              "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
+                .exec(String.format("/usr/bin/diff %s %s",
+                                    "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
+                                    "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
         StreamGobbler streamGobbler =
                 new StreamGobbler(process.getInputStream(), System.out::println);
@@ -79,7 +119,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_455();
         }
         catch (Exception ex) {
             ex.printStackTrace();
