@@ -8,9 +8,12 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
+ * https://uva.onlinejudge.org
+ * <p>
  * Profile usage:
  * <p>
- * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,file=/Users/mstepan/repo/uva-online-judge/src/main/java/uva-profile.svg,event=cpu
+ * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,
+ * file=/Users/mstepan/repo/uva-online-judge/src/main/java/uva-profile.svg,event=cpu
  */
 public class Main {
 
@@ -19,17 +22,8 @@ public class Main {
         InputStream in = createInput();
         PrintStream out = createOutput();
 
-        long startTime = System.currentTimeMillis();
-
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            String line = rd.readLine();
-
-            //TODO:
-
-            long endTime = System.currentTimeMillis();
-
-            System.out.println("time: " + (endTime - startTime) + " ms");
 
             diff();
         }
@@ -65,8 +59,8 @@ public class Main {
 
         Process process = Runtime.getRuntime()
                 .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                        "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
-                        "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
+                                              "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
+                                              "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
         StreamGobbler streamGobbler =
                 new StreamGobbler(process.getInputStream(), System.out::println);

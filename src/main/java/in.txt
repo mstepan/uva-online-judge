@@ -1,22 +1,153 @@
-2147483647 2147483647
-2146483647 2147483647
+10
+
+3 3
+Hpv
+eHC
+uoN
+6
+e
+oC
+N
+e
+eH
+o
+
+9 8
+jajPjpVd
+WJVhyowL
+YZMZrqDG
+rxpMiqCo
+RKGCzlmG
+KRjRKZKR
+DIMJfQmy
+dcAhazYQ
+uOLWukMH
+4
+Q
+QaW
+m
+au
+
+7 10
+wIkaNboMsi
+BrFaMVJYgN
+LZFuOWEqrW
+LqZPPAYELF
+guryfqoNxW
+lSvrzLausE
+nOFqhTIEKO
+7
+Yq
+rEo
+Ns
+AqL
+EN
+u
+ig
+
+8 8
+rAQcTNSH
+tWwOiyNo
+otEWWKMi
+obcVgVDB
+cxUdFFJZ
+VlvPeyWb
+XESIYRhg
+VeCvGqwa
+8
+FVKy
+Bi
+Zbg
+DFeIC
+gVc
+i
+TiWgF
+FdUxc
+
+10 1
+H
+T
+Y
+a
+A
+u
+K
+O
+c
+f
+7
+u
+TY
+T
+KOcf
+A
+O
+c
+
+8 10
+gcTEbJMLbx
+gwvWUEbvoT
+EywPEmlsGc
+ibRGzYHZLF
+EBDWkJIHMI
+PsICIkAEgO
+CmOoipJWdM
+hAjoghGuqz
+10
+IY
+goj
+IE
+MEJ
+i
+L
+zP
+T
+ZHY
+IkAE
+
+4 4
+CLcj
+GHtt
+xhoP
+rABa
+3
+t
+LH
+jcL
+
+8 8
+ZKlMdfkk
+eJIsjriD
+CFZWCndg
+AvEIVNio
+HDnODFDR
+cpDwBFEZ
+pwevqRnZ
+aXQDjGDc
+10
+inVO
+EZIl
+vEIVNi
+Z
+j
+c
+D
+D
+Il
+Ri
+
 1 2
-1 10
-2 3
-2 10
-1 1000001
-550 9214
-500000 1500000
-4 5
-4 7
-5 7
-5 5
-5 6
-1500000 1500001
-1500000 1500000
-1500006 1500019
-1500006 1500018
-1500007 1500018
-1500007 1500019
-1500008 1500019
-1500008 1500018
+uI
+1
+I
+
+1 1
+B
+7
+B
+B
+B
+B
+B
+B
+B
