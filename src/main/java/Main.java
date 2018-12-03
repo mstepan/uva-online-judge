@@ -8,8 +8,6 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- * Uva
- * <p>
  * https://uva.onlinejudge.org
  * <p>
  * Profile usage:
@@ -26,13 +24,10 @@ public class Main {
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            final int testCases = Integer.parseInt(rd.readLine().trim());
-
 
             diff();
         }
     }
-
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
@@ -93,7 +88,7 @@ public class Main {
         private Consumer<String> consumer;
 
 
-        public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
+        StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
             this.inputStream = inputStream;
             this.consumer = consumer;
         }
