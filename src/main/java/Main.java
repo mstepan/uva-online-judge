@@ -25,8 +25,6 @@ public class Main {
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
-
             diff();
         }
     }

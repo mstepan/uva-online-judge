@@ -7,13 +7,11 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
 /**
  *
- * Recursive top-down dynamic solution with memoization.
+ * Recursive backtracking with pruning.
  *
  * https://vjudge.net/problem/UVA-10911
  *
@@ -25,14 +23,16 @@ import java.util.function.Consumer;
  * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,
  * file=/Users/mstepan/repo/uva-online-judge/src/main/java/uva-profile.svg,event=cpu
  */
-public class Uva_10911 {
+public class Uva_10911_backtracking {
 
-    private Uva_10911() throws IOException, InterruptedException {
+    private Uva_10911_backtracking() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
+
+//            final long startTime = System.currentTimeMillis();
 
             for (int caseIndex = 1; ; ++caseIndex) {
 
@@ -59,67 +59,68 @@ public class Uva_10911 {
                 out.printf("Case %d: %.2f%n", caseIndex, optimalSolution);
             }
 
+//            final long endTime = System.currentTimeMillis();
+//
+//            System.out.printf("time: %d ms%n", (endTime - startTime));
+
             diff();
         }
     }
 
-    private static double findOptimalSolution(Position[] positions) {
+    private double findOptimalSolution(Position[] positions) {
 
-        final int initialMask = (1 << positions.length) - 1;
+        double[] bestSoFar = {Double.POSITIVE_INFINITY};
 
-        return findRec(positions, initialMask, new HashMap<>());
+        findOptimalRec(positions, new boolean[positions.length], positions.length / 2, 0.0, bestSoFar);
+
+        return bestSoFar[0];
     }
 
-    private static double findRec(Position[] positions, int initialMask, Map<Integer, Double> cache) {
+    private void findOptimalRec(Position[] positions, boolean[] used, int pairsLeft, double totalCost, double[] bestSoFar) {
 
-        if (initialMask == 0) {
-            return 0.0;
+        if (Double.compare(totalCost, bestSoFar[0]) > 0) {
+            return;
         }
 
-        if (cache.containsKey(initialMask)) {
-            return cache.get(initialMask);
+        if (pairsLeft == 0) {
+
+            if (Double.compare(totalCost, bestSoFar[0]) < 0) {
+                bestSoFar[0] = totalCost;
+            }
+
+            return;
         }
 
-        double bestSoFar = Double.POSITIVE_INFINITY;
+        int i = firstClear(used);
+        used[i] = true;
 
-        int mask = initialMask;
+        Position cur = positions[i];
 
+        for (int j = 0; j < positions.length; ++j) {
 
-        int i = lsbOne(mask);
-        int index1 = log2(i);
-        mask = zeroLsb(mask);
+            if (!used[j]) {
 
-        int cur = mask;
+                Position other = positions[j];
 
-        while (cur != 0) {
-            int j = lsbOne(cur);
-            cur = zeroLsb(cur);
+                used[j] = true;
 
-            int index2 = log2(j);
+                findOptimalRec(positions, used, pairsLeft - 1, totalCost + cur.distance(other), bestSoFar);
 
-            bestSoFar = Math.min(bestSoFar,
-                                 positions[index1].distance(positions[index2]) +
-                                         findRec(positions, mask ^ j, cache));
+                used[j] = false;
+            }
         }
 
-        cache.put(initialMask, bestSoFar);
-
-        return bestSoFar;
+        used[i] = false;
     }
 
-    // get LSB set to '1'
-    private static int lsbOne(int value) {
-        return value & ((~value) + 1);
-    }
+    private static int firstClear(boolean[] used) {
+        for (int i = 0; i < used.length; ++i) {
+            if (!used[i]) {
+                return i;
+            }
+        }
 
-    // zero LSB set to '1'
-    private static int zeroLsb(int value) {
-        return value & (value - 1);
-    }
-
-
-    private static int log2(int value) {
-        return (int) (Math.log(value) / Math.log(2.0));
+        throw new IllegalStateException("Can't be here");
     }
 
     private static final class Position {
@@ -189,7 +190,7 @@ public class Uva_10911 {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Uva_10911();
+            new Uva_10911_backtracking();
         }
         catch (Exception ex) {
             ex.printStackTrace();
