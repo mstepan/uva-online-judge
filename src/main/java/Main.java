@@ -25,9 +25,28 @@ public class Main {
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
+            //TODO:
+
+
             diff();
         }
     }
+
+    /*
+
+    10360 Rat Attack - complete search
+    10341 Solve It - bisection method (divide-and-conquer)
+    11292 Dragon of Loowater
+    11450 Wedding Shopping
+    10911 Forming Quiz Teams
+    11635 Hotel Booking
+    11506 Angry Programmer
+    10243 Fire! Fire!! Fire!!!
+    10717 Mint
+    11512 GATTACA
+    10065 Useless Tile Packers
+
+     */
 
 
     //------------------------------------------------------------------------------------------------------------------
