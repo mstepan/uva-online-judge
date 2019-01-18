@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 /**
+ * https://vjudge.net/problem/UVA-11292
  * <p>
  * https://vjudge.net/problem
  * <p>
@@ -17,20 +20,69 @@ import java.util.function.Consumer;
  * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,
  * file=/Users/mstepan/repo/uva-online-judge/src/main/java/uva-profile.svg,event=cpu
  */
-public class Main {
+public class Uva_11292 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_11292() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            while (true) {
+                String[] data = rd.readLine().trim().split("\\s+");
 
+                int headsCnt = Integer.parseInt(data[0]);
+                int knightsCnt = Integer.parseInt(data[1]);
+
+                if (headsCnt == 0 && knightsCnt == 0) {
+                    break;
+                }
+
+                int[] heads = new int[headsCnt];
+                for (int i = 0; i < heads.length; ++i) {
+                    heads[i] = Integer.parseInt(rd.readLine().trim());
+                }
+
+                int[] knights = new int[knightsCnt];
+                for (int i = 0; i < knights.length; ++i) {
+                    knights[i] = Integer.parseInt(rd.readLine().trim());
+                }
+
+                int optimalSol = findOptimalSolution(heads, knights);
+
+                if (optimalSol >= 0) {
+                    out.println(optimalSol);
+                }
+                else {
+                    out.println("Loowater is doomed!");
+                }
+            }
 
             diff();
         }
+    }
+
+    private int findOptimalSolution(int[] heads, int[] knights) {
+
+        if (heads.length > knights.length) {
+            return -1;
+        }
+
+        Arrays.sort(heads);
+        Arrays.sort(knights);
+
+        int money = 0;
+        int headIndex = 0;
+
+        for (int i = 0; i < knights.length && headIndex < heads.length; ++i) {
+            if (heads[headIndex] <= knights[i]) {
+                money += knights[i];
+                ++headIndex;
+            }
+        }
+
+        return headIndex == heads.length ? money : -1;
     }
 
 
@@ -79,9 +131,9 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                              "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
-                                              "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
+                .exec(String.format("/usr/bin/diff %s %s",
+                                    "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
+                                    "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
         StreamGobbler streamGobbler =
                 new StreamGobbler(process.getInputStream(), System.out::println);
@@ -96,7 +148,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_11292();
         }
         catch (Exception ex) {
             ex.printStackTrace();
