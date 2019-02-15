@@ -7,10 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
 
+
 /**
- * <p>
- * Vertex coverage problem on a tree. Solve using DP technique.
- *
  * <p>
  * https://vjudge.net/problem
  * <p>
@@ -35,7 +33,6 @@ public class Main {
     }
 
     /*
-    10717 Mint
     11512 GATTACA
     10065 Useless Tile Packers
      */
