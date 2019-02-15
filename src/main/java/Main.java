@@ -5,11 +5,12 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
+ * <p>
+ * Vertex coverage problem on a tree. Solve using DP technique.
+ *
  * <p>
  * https://vjudge.net/problem
  * <p>
@@ -34,17 +35,10 @@ public class Main {
     }
 
     /*
-    11450 Wedding Shopping
-
-    10911 Forming Quiz Teams
-    11635 Hotel Booking
-    11506 Angry Programmer
-    10243 Fire! Fire!! Fire!!!
     10717 Mint
     11512 GATTACA
     10065 Useless Tile Packers
      */
-
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
