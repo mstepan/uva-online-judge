@@ -1,165 +1,245 @@
 package solved;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.Optional;
+import java.util.function.Consumer;
+
 
 /**
- * 11512 - GATTACA
+ * GATTACA, https://vjudge.net/problem/UVA-11512
+ *
+ * <p>
+ * Profile usage:
+ * <p>
+ * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,
+ * file=/Users/mstepan/repo/uva-online-judge/src/main/java/uva-profile.svg,event=cpu
  */
 public class Uva_11512 {
 
-    static final class Substring implements Comparable<Substring> {
+    private Uva_11512() throws IOException, InterruptedException {
 
-        final String base;
-        final int from;
+        InputStream in = createInput();
+        PrintStream out = createOutput();
 
-        Substring(String base, int from) {
-            this.base = base;
-            this.from = from;
-        }
+        try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-        @Override
-        public int compareTo(Substring other) {
-            int first = from;
-            int second = other.from;
+            final int testCasesCnt = Integer.parseInt(rd.readLine().trim());
 
-            while (first < base.length() && second < other.base.length()) {
+            for (int i = 0; i < testCasesCnt; ++i) {
+                String str = rd.readLine().trim();
 
-                char ch1 = base.charAt(first);
-                char ch2 = other.base.charAt(second);
+                Optional<Pair> res = findLRS(str);
 
-                int cmp = Character.compare(ch1, ch2);
-
-                if (cmp != 0) {
-                    return cmp;
+                if (res.isPresent()) {
+                    out.printf("%s %d%n", res.get().str, res.get().count);
                 }
-
-                ++first;
-                ++second;
+                else {
+                    out.println("No repetitions found!");
+                }
             }
 
-            if (first == base.length()) {
-                return second == other.base.length() ? 0 : -1;
-            }
-
-            return 1;
-        }
-
-        int length() {
-            return base.length() - from;
-        }
-
-        char charAt(int index) {
-            return base.charAt(from + index);
-        }
-
-        @Override
-        public String toString() {
-            return base.substring(from);
+            diff();
         }
     }
 
+    private static Optional<Pair> findLRS(String str) {
+        Suffix[] suffixArr = createSuffixArray(str);
 
-    private static final class RepetitionAndCount {
+        String longestSoFar = "";
+        int cnt = 1;
 
-        private static final RepetitionAndCount EMPTY = new RepetitionAndCount("", -1);
+        for (int i = 1; i < suffixArr.length; ++i) {
 
+            Suffix prev = suffixArr[i - 1];
+            Suffix cur = suffixArr[i];
+
+            String commonStr = Suffix.commonPrefix(prev, cur);
+
+            if (commonStr.length() > longestSoFar.length()) {
+                longestSoFar = commonStr;
+                cnt = 2;
+            }
+            else if (longestSoFar.equals(commonStr)) {
+                ++cnt;
+            }
+        }
+
+        if ("".equals(longestSoFar)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new Pair(longestSoFar, cnt));
+    }
+
+    static final class Pair {
         final String str;
         final int count;
 
-        RepetitionAndCount(String str, int count) {
+        Pair(String str, int count) {
             this.str = str;
             this.count = count;
         }
     }
 
+    private static Suffix[] createSuffixArray(String str) {
 
-    /**
-     * time: O(N^2)
-     * space: O(N)
+        Suffix[] suffixArr = new Suffix[str.length()];
+
+        for (int i = 0; i < suffixArr.length; ++i) {
+            suffixArr[i] = new Suffix(str, i);
+        }
+
+        Arrays.sort(suffixArr);
+
+        return suffixArr;
+    }
+
+    private static final class Suffix implements Comparable<Suffix> {
+
+        final String str;
+        final int from;
+
+        Suffix(String str, int from) {
+            this.str = str;
+            this.from = from;
+        }
+
+        @Override
+        public int compareTo(Suffix other) {
+
+            if (from == other.from) {
+                return 0;
+            }
+
+            int i = from;
+            int j = other.from;
+
+            while (i < str.length() && j < str.length()) {
+
+                char ch1 = str.charAt(i);
+                char ch2 = str.charAt(j);
+
+                int cmpRes = Character.compare(ch1, ch2);
+
+                if (cmpRes != 0) {
+                    return cmpRes;
+                }
+
+                ++i;
+                ++j;
+            }
+
+            return i < str.length() ? 1 : -1;
+        }
+
+        @Override
+        public String toString() {
+            return from + ": " + str.substring(from);
+        }
+
+        static String commonPrefix(Suffix first, Suffix second) {
+
+            int i = first.from;
+            int j = second.from;
+
+            int matchedLength = 0;
+
+            while (i < first.str.length() && j < second.str.length()) {
+
+                if (first.str.charAt(i) != second.str.charAt(j)) {
+                    break;
+                }
+
+                ++matchedLength;
+                ++i;
+                ++j;
+            }
+
+            return first.str.substring(first.from, first.from + matchedLength);
+        }
+    }
+
+
+    /*
+    11512 GATTACA
+    10065 Useless Tile Packers
      */
-    private static RepetitionAndCount longestRepeatedSubstring(String str) {
 
-        Substring[] suffixArray = new Substring[str.length()];
+    //------------------------------------------------------------------------------------------------------------------
+    // DEBUG part
+    //------------------------------------------------------------------------------------------------------------------
 
-        for (int i = 0; i < str.length(); ++i) {
-            suffixArray[i] = new Substring(str, i);
+    private static boolean DEBUG;
+
+    private static InputStream createInput() throws IOException {
+        if (DEBUG) {
+            return Files.newInputStream(Paths.get("/Users/mstepan/repo/uva-online-judge/src/main/java/in.txt"));
         }
-
-        Arrays.sort(suffixArray);
-
-        String longestRepeated = "";
-        int cnt = 0;
-
-        for (int i = 1; i < suffixArray.length; ++i) {
-
-            String prefix = findCommonPrefix(suffixArray[i - 1], suffixArray[i]);
-
-            if (prefix.length() > longestRepeated.length()) {
-                longestRepeated = prefix;
-                cnt = 2;
-            }
-            else if (prefix.equals(longestRepeated)) {
-                ++cnt;
-            }
-        }
-
-        return longestRepeated.length() == 0 ? RepetitionAndCount.EMPTY : new RepetitionAndCount(longestRepeated, cnt);
+        return System.in;
     }
 
-    private static String findCommonPrefix(Substring first, Substring second) {
-
-        StringBuilder buf = new StringBuilder();
-
-        for (int i = 0; i < Math.min(first.length(), second.length()); ++i) {
-            if (first.charAt(i) != second.charAt(i)) {
-                break;
-            }
-
-            buf.append(first.charAt(i));
+    private static PrintStream createOutput() throws IOException {
+        if (DEBUG) {
+            return new PrintStream(Files.newOutputStream(
+                    Paths.get("/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt")));
         }
-
-        return buf.toString();
+        return System.out;
     }
 
-    private Uva_11512(boolean debugMode) throws IOException {
+    private static void diff() throws IOException, InterruptedException {
 
-        InputStream in = System.in;
-
-        if (debugMode) {
-            in = Files.newInputStream(Paths.get("/Users/mstepan/repo/uva-online-judge/src/main/java/in.txt"));
+        if (!DEBUG) {
+            return;
         }
 
-        try (Scanner sc = new Scanner(in)) {
+        Process process = Runtime.getRuntime()
+                .exec(String.format("/usr/bin/diff %s %s",
+                                    "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
+                                    "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
-            int dnasCount = sc.nextInt();
+        StreamGobbler streamGobbler =
+                new StreamGobbler(process.getInputStream(), System.out::println);
 
-            for (int i = 0; i < dnasCount; ++i) {
-                String dna = sc.next();
-                RepetitionAndCount repeated = longestRepeatedSubstring(dna);
+        Thread th = new Thread(streamGobbler);
+        th.start();
+        th.join();
 
-                if (repeated == RepetitionAndCount.EMPTY) {
-                    System.out.println("No repetitions found!");
-                }
-                else {
-                    System.out.printf("%s %d%n", repeated.str, repeated.count);
-                }
-            }
-        }
+        process.waitFor();
     }
 
     public static void main(String[] args) {
         try {
-            new Uva_11512(args.length == 1);
+            DEBUG = (args.length == 1);
+            new Uva_11512();
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-}
+    private static class StreamGobbler implements Runnable {
 
+        private InputStream inputStream;
+
+        private Consumer<String> consumer;
+
+
+        StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
+            this.inputStream = inputStream;
+            this.consumer = consumer;
+        }
+
+        @Override
+        public void run() {
+            new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
+        }
+    }
+
+}

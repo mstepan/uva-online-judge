@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 
 
 /**
- * <p>
- * https://vjudge.net/problem
+ * https://vjudge.net/
+ *
  * <p>
  * Profile usage:
  * <p>
@@ -33,7 +33,6 @@ public class Main {
     }
 
     /*
-    11512 GATTACA
     10065 Useless Tile Packers
      */
 

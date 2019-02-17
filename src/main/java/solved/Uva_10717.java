@@ -68,10 +68,12 @@ public class Uva_10717 {
         int smaller = Integer.MIN_VALUE;
         int bigger = Integer.MAX_VALUE;
 
+        // Iterate over all quadruple(4) values and find Least Common Multiple.
         for (int i = 0; i < coins.length - 3; ++i) {
             for (int j = i + 1; j < coins.length - 2; ++j) {
                 for (int k = j + 1; k < coins.length - 1; ++k) {
                     for (int t = k + 1; t < coins.length; ++t) {
+
                         int curLcm = lcm(coins[i], coins[j], coins[k], coins[t]);
 
                         if (tableHeight % curLcm == 0) {
