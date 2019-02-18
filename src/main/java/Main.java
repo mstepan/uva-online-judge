@@ -5,11 +5,13 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 
 /**
- * https://vjudge.net/
+ * Useless Tile Packers, https://vjudge.net/problem/UVA-10065
  *
  * <p>
  * Profile usage:
@@ -26,15 +28,225 @@ public class Main {
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            int testCaseIndex = 1;
+
+            while (true) {
+                int points = Integer.parseInt(rd.readLine().trim());
+
+                if (points == 0) {
+                    break;
+                }
+
+                Point[] allPoints = new Point[points];
+
+                for (int i = 0; i < allPoints.length; ++i) {
+                    String[] pointData = rd.readLine().trim().split("\\s+");
+                    allPoints[i] = new Point(Integer.parseInt(pointData[0]), Integer.parseInt(pointData[1]));
+                }
+
+                Point[] convexHull = calculateConvexHull(allPoints);
+
+                double curArea = calculateArea(allPoints);
+                double convexArea = calculateArea(convexHull);
+
+                double vestedSpaceInPercentage = 100.0 - ((curArea * 100.0) / convexArea);
+
+                out.printf("Tile #%d%n", testCaseIndex);
+                out.printf("Wasted Space = %.2f %%%n%n", vestedSpaceInPercentage);
+
+                ++testCaseIndex;
+            }
 
             diff();
         }
     }
 
-    /*
-    10065 Useless Tile Packers
+    /**
+     * Calculate are of a polygon specified by allPoints parameter.
+     * <p>
+     * time: O(N)
+     * space: O(1)
      */
+    private double calculateArea(Point[] allPoints) {
+
+        double res = 0.0;
+
+        for (int i = 1; i < allPoints.length; ++i) {
+            Point prev = allPoints[i - 1];
+            Point cur = allPoints[i];
+            res += prev.x * cur.y - prev.y * cur.x;
+        }
+
+        Point first = allPoints[0];
+        Point last = allPoints[allPoints.length - 1];
+
+        res += last.x * first.y - last.y * first.x;
+
+        return Math.abs(res / 2);
+    }
+
+    /**
+     * Calculate convex hull using Jarvis gift wrapping algorithm.
+     * <p>
+     * time: O(N^2)
+     * space: O(N)
+     */
+    private Point[] calculateConvexHull(Point[] allPoints) {
+
+        List<Point> convexHull = new ArrayList<>();
+
+        boolean[] used = new boolean[allPoints.length];
+        int startPointIndex = findLeftmostPoint(allPoints);
+
+        convexHull.add(allPoints[startPointIndex]);
+
+        used[startPointIndex] = true;
+
+        int curIndex = startPointIndex;
+
+        while (convexHull.size() < allPoints.length) {
+
+            int nextIndex = findNextHullPoint(curIndex, allPoints, used);
+
+            if (nextIndex == startPointIndex) {
+                break;
+            }
+
+            used[nextIndex] = true;
+            convexHull.add(allPoints[nextIndex]);
+            curIndex = nextIndex;
+        }
+
+        assert convexHull.size() >= 2 : "Convex hull too small, only " + convexHull.size() + " points.";
+        return convexHull.toArray(new Point[0]);
+    }
+
+    private static int findNextHullPoint(int baseIndex, Point[] allPoints, boolean[] used) {
+
+        final Point base = allPoints[baseIndex];
+
+        int candidateIndex = findUnused(used);
+
+        Point candidate = allPoints[candidateIndex];
+
+        for (int i = 0; i < allPoints.length; ++i) {
+
+            Point singlePoint = allPoints[i];
+
+            if (singlePoint == candidate || singlePoint == base) {
+                continue;
+            }
+
+            Orientation orient = Point.calculateOrientation(base, candidate, singlePoint);
+
+            if (orient == Orientation.COLLINEAR) {
+
+                double d1 = Point.distance(base, candidate);
+                double d2 = Point.distance(base, singlePoint);
+
+                if (Double.compare(d1, d2) < 0) {
+                    candidate = singlePoint;
+                    candidateIndex = i;
+                }
+
+            }
+            else if (orient == Orientation.CLOCK) {
+                candidate = singlePoint;
+                candidateIndex = i;
+            }
+        }
+
+
+        return candidateIndex;
+    }
+
+    private static int findUnused(boolean[] used) {
+
+        for (int i = 0; i < used.length; ++i) {
+            if (!used[i]) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private int findLeftmostPoint(Point[] allPoints) {
+
+        int leftIndex = 0;
+        Point left = allPoints[0];
+
+        for (int i = 1; i < allPoints.length; ++i) {
+            Point cur = allPoints[i];
+
+            if (cur.x < left.x || (cur.x == left.x && cur.y < left.y)) {
+                leftIndex = i;
+                left = cur;
+            }
+        }
+
+        return leftIndex;
+    }
+
+    enum Orientation {
+        CLOCK,
+        COUNTER_CLOCK,
+        COLLINEAR
+    }
+
+    static final class Point {
+        final int x;
+        final int y;
+
+        Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+
+        static Orientation calculateOrientation(Point a, Point b, Point c) {
+
+            int result = (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y);
+
+            if (result == 0) {
+                return Orientation.COLLINEAR;
+            }
+
+            return result > 0 ? Orientation.COUNTER_CLOCK : Orientation.CLOCK;
+        }
+
+        static double distance(Point base, Point other) {
+
+            double dx = (double) base.x - other.x;
+            double dy = (double) base.y - other.y;
+
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+
+            Point other = (Point) obj;
+
+            return x == other.x && y == other.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 * x + y;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + x + ", " + y + ")";
+        }
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
