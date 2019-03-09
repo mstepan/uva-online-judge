@@ -1,2 +1,16 @@
-Stan wins
-Ollie wins
+ab
+ba
+
+abc
+acb
+bac
+bca
+cab
+cba
+
+abc
+acb
+bac
+bca
+cab
+cba
