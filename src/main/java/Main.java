@@ -23,10 +23,16 @@ public class Main {
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
+//            final int testsCount = Integer.parseInt(rd.readLine().trim());
+
             //TODO:
 
             diff();
         }
+    }
+
+    private static int toGrayCode(int value) {
+        return value ^ (value >> 1);
     }
 
     //------------------------------------------------------------------------------------------------------------------
