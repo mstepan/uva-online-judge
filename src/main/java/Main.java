@@ -7,8 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
 
-
 /**
+ * <p>
  * Profile usage:
  * <p>
  * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,
@@ -23,16 +23,10 @@ public class Main {
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-//            final int testsCount = Integer.parseInt(rd.readLine().trim());
-
             //TODO:
 
             diff();
         }
-    }
-
-    private static int toGrayCode(int value) {
-        return value ^ (value >> 1);
     }
 
     //------------------------------------------------------------------------------------------------------------------
