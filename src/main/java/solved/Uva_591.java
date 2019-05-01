@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,20 +15,57 @@ import java.util.function.Consumer;
  * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,
  * file=/Users/mstepan/repo/uva-online-judge/src/main/java/uva-profile.svg,event=cpu
  */
-public class Main {
+public class Uva_591 {
 
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_591() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            int stacksCount = Integer.parseInt(rd.readLine().trim());
+            int index = 1;
+
+            while (stacksCount != 0) {
+                int count = countBricksToMove(rd);
+
+                out.printf("Set #%d%n", index);
+                out.printf("The minimum number of moves is %d.%n%n", count);
+
+                stacksCount = Integer.parseInt(rd.readLine().trim());
+                ++index;
+            }
 
             diff();
         }
+    }
+
+    private int countBricksToMove(BufferedReader rd) throws IOException {
+
+        final String[] data = rd.readLine().trim().split(" ");
+
+        final int[] arr = new int[data.length];
+        int sum = 0;
+
+        for (int i = 0; i < data.length; ++i) {
+
+            int value = Integer.parseInt(data[i]);
+
+            arr[i] = value;
+            sum += value;
+        }
+
+        final int avg = sum / arr.length;
+
+        int count = 0;
+
+        for (int value : arr) {
+            count += (value > avg ? (value - avg) : 0);
+        }
+
+        return count;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -57,9 +96,9 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                              "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
-                                              "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
+                .exec(String.format("/usr/bin/diff %s %s",
+                                    "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
+                                    "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
         StreamGobbler streamGobbler =
                 new StreamGobbler(process.getInputStream(), System.out::println);
@@ -74,7 +113,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_591();
         }
         catch (Exception ex) {
             ex.printStackTrace();
