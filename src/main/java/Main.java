@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- * Box of Bricks  (https://vjudge.net/problem/UVA-591)
+ *  (https://vjudge.net/problem/)
  * <p>
  * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,
  * file=/Users/mstepan/repo/uva-online-judge/src/main/java/uva-profile.svg,event=cpu
