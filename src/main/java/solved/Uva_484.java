@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -5,24 +7,45 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * Entropy Text Analyzer (https://vjudge.net/problem/UVA-860)
+ * The Department of Redundancy Department (https://vjudge.net/problem/UVA-484)
  * <p>
  * -agentpath:/Users/mstepan/repo/async-profiler/build/libasyncProfiler.so=start,svg,
  * file=/Users/mstepan/repo/uva-online-judge/src/main/java/uva-profile.svg,event=cpu
  */
-public class Main {
+public class Uva_484 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_484() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            //TODO:
+            String line = rd.readLine();
+
+            Map<Integer, Integer> freq = new LinkedHashMap<>();
+
+            while (line != null) {
+
+                String[] data = line.trim().split("\\s+");
+
+                for (String valueStr : data) {
+                    int val = Integer.parseInt(valueStr);
+
+                    freq.compute(val, (key, counter) -> counter == null ? 1 : counter + 1);
+                }
+
+                line = rd.readLine();
+            }
+
+            for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+                out.printf("%d %d%n", entry.getKey(), entry.getValue());
+            }
 
             diff();
         }
@@ -57,9 +80,9 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                              "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
-                                              "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
+                .exec(String.format("/usr/bin/diff %s %s",
+                                    "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
+                                    "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
         StreamGobbler streamGobbler =
                 new StreamGobbler(process.getInputStream(), System.out::println);
@@ -74,7 +97,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_484();
         }
         catch (Exception ex) {
             ex.printStackTrace();
