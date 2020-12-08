@@ -20,12 +20,58 @@ public class Main {
 
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-            String line = rd.readLine().trim();
+            int testCasesCount = Integer.parseInt(rd.readLine().trim());
 
-            //TODO:
+            for (int i = 0; i < testCasesCount; ++i) {
+                int n = Integer.parseInt(rd.readLine().trim());
+                String map = rd.readLine().trim();
+
+                out.println(maxRoomVisited(map, n));
+            }
+
 
             diff();
         }
+    }
+
+    private int maxRoomVisited(String map, int n) {
+
+        int leftDoor = findLeftDoor(map);
+
+        if (leftDoor == -1) {
+            return n;
+        }
+
+        int rightDoor = findRightDoor(map);
+
+        int leftCount = leftDoor + 1;
+        int rightCount = n - rightDoor;
+
+        int maxFromLeft = Math.max(2 * leftCount, leftCount + (n-leftDoor));
+
+        int maxFromRight = Math.max(2 * rightCount, rightCount + rightDoor + 1);
+
+        return  Math.max(maxFromLeft, maxFromRight);
+    }
+
+    private int findLeftDoor(String map) {
+        for (int i = 0; i < map.length(); ++i) {
+            if (map.charAt(i) == '1') {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private int findRightDoor(String map) {
+        for (int i = map.length() - 1; i >= 0; --i) {
+            if (map.charAt(i) == '1') {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     //------------------------------------------------------------------------------------------------------------------
