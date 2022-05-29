@@ -5,8 +5,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -22,30 +20,23 @@ public class Main {
         PrintStream out = createOutput();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-
-            for (int testCase = 1; ; ++testCase) {
-                int arrLength = Integer.parseInt(reader.readLine().trim());
-
-                if (arrLength == 0) {
-                    break;
-                }
-
-                int[] arr = readArray(reader, arrLength);
-
-                int queryLength = Integer.parseInt(reader.readLine().trim());
-
-                int[] queries = readArray(reader, queryLength);
-
-                answerAllQueries(out, testCase, arr, queries);
-            }
-
+            int x = Integer.parseInt(reader.readLine().trim());
+            out.printf("x = %d%n", x);
 
             diff();
         }
     }
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // UTILS
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Read array from input stream, each element of an array is read as a separate new line.
+     */
     private int[] readArray(BufferedReader reader, int arrLength) throws IOException {
-        int[] arr = new int[arrLength];
+        final int[] arr = new int[arrLength];
 
         for (int i = 0; i < arr.length; ++i) {
             arr[i] = Integer.parseInt(reader.readLine());
@@ -53,81 +44,6 @@ public class Main {
 
         return arr;
     }
-
-
-    /**
-     * https://vjudge.net/problem/UVA-10487
-     * <p>
-     * N - arr.length
-     * M - queries.length
-     * <p>
-     * time: O(N*lgN + M*N)
-     * space: O(1)
-     */
-    static void answerAllQueries(PrintStream out, int caseNo, int[] arr, int[] queries) {
-        Objects.requireNonNull(arr);
-        Objects.requireNonNull(queries);
-
-        out.printf("Case %d:%n", caseNo);
-
-
-        Arrays.sort(arr);
-        for (int singleQuery : queries) {
-            out.printf("Closest sum to %d is %d.%n", singleQuery, findClosestSum(arr, singleQuery));
-        }
-    }
-
-    /**
-     * time: O(N)
-     * space: O(1)
-     */
-    private static int findClosestSum(int[] arr, int value) {
-
-        int left = 0;
-        int right = arr.length - 1;
-
-        int bestSum = 0;
-        int bestDiff = Integer.MAX_VALUE;
-
-        while (left < right) {
-
-            long curSumLong = ((long) arr[left]) + arr[right];
-
-            // check for overflow
-            if (curSumLong > Integer.MAX_VALUE) {
-                --right;
-                continue;
-            }
-
-            //check for underflow
-            if (curSumLong < Integer.MIN_VALUE) {
-                ++left;
-                continue;
-            }
-
-            int curSum = (int) curSumLong;
-
-            if (curSum == value) {
-                return curSum;
-            }
-
-            int curDiff = Math.abs(value - curSum);
-            if (curDiff < bestDiff) {
-                bestDiff = curDiff;
-                bestSum = curSum;
-            }
-
-            if (curSum < value) {
-                ++left;
-            }
-            else {
-                --right;
-            }
-        }
-
-        return bestSum;
-    }
-
 
     //------------------------------------------------------------------------------------------------------------------
     // DEBUG part
