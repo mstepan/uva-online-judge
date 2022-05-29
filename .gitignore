@@ -1,5 +1,6 @@
 # Compiled class file
 *.class
+target
 
 # Log file
 *.log
@@ -17,6 +18,11 @@
 *.zip
 *.tar.gz
 *.rar
+
+# input & output files
+src/main/java/in.txt
+src/main/java/out.txt
+src/main/java/out-actual.txt
 
 # MacOS files
 .DS_Store
