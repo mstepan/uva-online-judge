@@ -1,20 +1,23 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- * <Title>
+ * Automorphic Numbers
  * <p>
- * https://vjudge.net/problem/UVA-xxx
+ * https://vjudge.net/problem/UVA-10433
  */
-public class Main {
+public class Uva_10433 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_10433() throws IOException, InterruptedException {
 
 
         InputStream in = createInput();
@@ -22,8 +25,30 @@ public class Main {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
 
-            String str = reader.readLine().trim();
-            out.println(str);
+            while (true) {
+
+                String valStr = reader.readLine();
+
+                if (valStr == null) {
+                    break;
+                }
+
+                valStr = valStr.trim();
+
+                BigInteger val = new BigInteger(valStr);
+
+                BigInteger square = val.multiply(val);
+
+                String squareStr = square.toString();
+
+                if (squareStr.endsWith(valStr)) {
+                    out.printf("Automorphic number of %d-digit.%n", valStr.length());
+                }
+                else {
+                    out.println("Not an Automorphic number.");
+                }
+
+            }
 
             diff();
         }
@@ -75,9 +100,9 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-            .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                          "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
-                                          "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
+            .exec(String.format("/usr/bin/diff %s %s",
+                                "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
+                                "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
         StreamGobbler streamGobbler =
             new StreamGobbler(process.getInputStream(), System.out::println);
@@ -92,7 +117,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_10433();
         }
         catch (Exception ex) {
             ex.printStackTrace();
