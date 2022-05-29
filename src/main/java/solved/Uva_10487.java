@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +16,9 @@ import java.util.function.Consumer;
  * <p>
  * https://vjudge.net/problem/UVA-10487
  */
-public class Main {
+public class Uva_10487 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_10487() throws IOException, InterruptedException {
 
         InputStream in = createInput();
         PrintStream out = createOutput();
@@ -157,9 +159,9 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-            .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                          "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
-                                          "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
+            .exec(String.format("/usr/bin/diff %s %s",
+                                "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
+                                "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
         StreamGobbler streamGobbler =
             new StreamGobbler(process.getInputStream(), System.out::println);
@@ -174,7 +176,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_10487();
         }
         catch (Exception ex) {
             ex.printStackTrace();
