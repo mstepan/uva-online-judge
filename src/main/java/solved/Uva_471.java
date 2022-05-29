@@ -1,3 +1,5 @@
+package solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,13 +10,13 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- * <Title>
+ * Magic Numbers
  * <p>
- * https://vjudge.net/problem/UVA-xxx
+ * https://vjudge.net/problem/UVA-471
  */
-public class Main {
+public class Uva_471 {
 
-    private Main() throws IOException, InterruptedException {
+    private Uva_471() throws IOException, InterruptedException {
 
 
         InputStream in = createInput();
@@ -24,10 +26,53 @@ public class Main {
 
             int testCases = Integer.parseInt(reader.readLine().trim());
 
-            out.println(testCases);
+            for (int i = 0; i < testCases; ++i) {
+
+                reader.readLine();
+
+                if (i > 0) {
+                    out.println();
+                }
+
+                long value = Long.parseLong(reader.readLine().trim());
+                printAllSpecialPairs(out, value);
+            }
 
             diff();
         }
+    }
+
+    private void printAllSpecialPairs(PrintStream out, long value) {
+
+        final long boundary = 10_000_000_000L / value;
+
+        for (long s2 = 1; s2 <= boundary; ++s2) {
+            if (hasUniqueDigits(s2)) {
+                long s1 = s2 * value;
+                if (hasUniqueDigits(s1)) {
+                    out.printf("%d / %d = %d%n", s1, s2, value);
+                }
+            }
+        }
+    }
+
+    private boolean hasUniqueDigits(long value) {
+
+        long temp = value;
+        int usedDigits = 0;
+
+        while (temp != 0) {
+            int digit = (int) (temp % 10);
+            temp /= 10L;
+            int mask = 1 << digit;
+
+            if ((usedDigits & mask) != 0) {
+                return false;
+            }
+            usedDigits |= mask;
+        }
+
+        return true;
     }
 
 
@@ -76,9 +121,9 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-            .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                          "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
-                                          "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
+            .exec(String.format("/usr/bin/diff %s %s",
+                                "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
+                                "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
 
         StreamGobbler streamGobbler =
             new StreamGobbler(process.getInputStream(), System.out::println);
@@ -93,7 +138,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            new Uva_471();
         }
         catch (Exception ex) {
             ex.printStackTrace();
