@@ -2,6 +2,7 @@ package graph;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,20 +47,4 @@ public final class UndirectedGraph {
     private void addEdgeSafely(String ver1, String ver2) {
         representation.compute(ver1, (notUsed, neighbours) -> neighbours == null ? new HashSet<>() : neighbours).add(ver2);
     }
-
-    public static void main(String[] args) {
-        UndirectedGraph graph = UndirectedGraph.parse("1-3,1-2,2-3,2-4");
-
-        for (String ver : graph.vertexes()) {
-            System.out.printf("%s => [", ver);
-            for (String adj : graph.adjacent(ver)) {
-                System.out.printf("%s, ", adj);
-            }
-            System.out.printf("]%n");
-        }
-
-
-    }
-
-
 }
