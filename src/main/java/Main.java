@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 /**
  * <a href="https://vjudge.net/problem/UVA-xxx">UVA-xxx</a>
  */
-public class MainExample {
+public class Main {
 
     private static void mainLogic() throws IOException, InterruptedException {
 
@@ -52,7 +52,7 @@ public class MainExample {
 
     private static InputStream createInput() throws IOException {
         if (DEBUG) {
-            return Files.newInputStream(Paths.get(Objects.requireNonNull(MainExample.class.getResource("in.txt")).getPath()));
+            return Files.newInputStream(Paths.get(Objects.requireNonNull(Main.class.getResource("in.txt")).getPath()));
         }
         return System.in;
     }
@@ -60,7 +60,7 @@ public class MainExample {
     private static PrintStream createOutput() throws IOException {
         if (DEBUG) {
             return new PrintStream(Files.newOutputStream(
-                Paths.get(Objects.requireNonNull(MainExample.class.getResource("out-actual.txt")).getPath())));
+                Paths.get(Objects.requireNonNull(Main.class.getResource("out-actual.txt")).getPath())));
         }
         return System.out;
     }
@@ -72,8 +72,8 @@ public class MainExample {
 
         Process process = Runtime.getRuntime()
             .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                          Objects.requireNonNull(MainExample.class.getResource("out.txt")).getPath(),
-                                          Objects.requireNonNull(MainExample.class.getResource("out-actual.txt")).getPath()));
+                                          Objects.requireNonNull(Main.class.getResource("out.txt")).getPath(),
+                                          Objects.requireNonNull(Main.class.getResource("out-actual.txt")).getPath()));
 
         StreamGobbler streamGobbler =
             new StreamGobbler(process.getInputStream(), System.out::println);
