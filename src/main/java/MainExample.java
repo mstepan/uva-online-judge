@@ -5,21 +5,22 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
  * <a href="https://vjudge.net/problem/UVA-xxx">UVA-xxx</a>
  */
-public class Main {
+public class MainExample {
 
-    private Main() throws IOException, InterruptedException {
+    private static void mainLogic() throws IOException, InterruptedException {
 
         try (PrintStream out = createOutput();
              BufferedReader reader = new BufferedReader(new InputStreamReader(createInput()))) {
 
-            int testCases = Integer.parseInt(reader.readLine().trim());
-
-            out.println(testCases);
+            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+                out.println(line);
+            }
 
             diff();
         }
@@ -33,8 +34,8 @@ public class Main {
     /**
      * Read array from input stream, each element of an array is read as a separate new line.
      */
-    private int[] readArray(BufferedReader reader, int arrLength) throws IOException {
-        final int[] arr = new int[arrLength];
+    private static int[] readArray(BufferedReader reader, int length) throws IOException {
+        final int[] arr = new int[length];
 
         for (int i = 0; i < arr.length; ++i) {
             arr[i] = Integer.parseInt(reader.readLine());
@@ -51,7 +52,7 @@ public class Main {
 
     private static InputStream createInput() throws IOException {
         if (DEBUG) {
-            return Files.newInputStream(Paths.get( Main.class.getResource("in.txt").getPath()));
+            return Files.newInputStream(Paths.get(Objects.requireNonNull(MainExample.class.getResource("in.txt")).getPath()));
         }
         return System.in;
     }
@@ -59,21 +60,20 @@ public class Main {
     private static PrintStream createOutput() throws IOException {
         if (DEBUG) {
             return new PrintStream(Files.newOutputStream(
-                Paths.get( Main.class.getResource("out-actual.txt").getPath())));
+                Paths.get(Objects.requireNonNull(MainExample.class.getResource("out-actual.txt")).getPath())));
         }
         return System.out;
     }
 
     private static void diff() throws IOException, InterruptedException {
-
         if (!DEBUG) {
             return;
         }
 
         Process process = Runtime.getRuntime()
             .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                          Main.class.getResource("out.txt").getPath(),
-                                          Main.class.getResource("out-actual.txt").getPath()));
+                                          Objects.requireNonNull(MainExample.class.getResource("out.txt")).getPath(),
+                                          Objects.requireNonNull(MainExample.class.getResource("out-actual.txt")).getPath()));
 
         StreamGobbler streamGobbler =
             new StreamGobbler(process.getInputStream(), System.out::println);
@@ -88,7 +88,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             DEBUG = (args.length == 1);
-            new Main();
+            mainLogic();
         }
         catch (Exception ex) {
             ex.printStackTrace();
