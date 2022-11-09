@@ -1,3 +1,5 @@
+package org.max.uva.solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * <a href="https://vjudge.net/problem/UVA-325">UVA-325</a>
  */
-public class Main {
+public class Uva_325 {
 
     private static final Pattern FLOAT_NUMBER_PATTERN = Pattern.compile("^[+-]?(\\d+\\.\\d+([e|E][+-]?\\d+)?|(\\d+[e|E][+-]?\\d+))$");
 
@@ -24,7 +26,14 @@ public class Main {
 
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 
-                out.println(line);
+                String lineTrimmed = line.trim();
+
+                if( "*".equals(lineTrimmed)){
+                    break;
+                }
+
+                String resolution = FLOAT_NUMBER_PATTERN.matcher(lineTrimmed).matches() ? "legal" : "illegal";
+                out.printf("%s is %s.\n", lineTrimmed, resolution);
             }
 
             diff();
@@ -90,8 +99,8 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-            .exec(java.lang.String.format("%s %s %s", DIFF_TOOL, getPathFromResourceFolder("out.txt"),
-                                          getPathFromResourceFolder("out-actual.txt")));
+            .exec(String.format("%s %s %s", DIFF_TOOL, getPathFromResourceFolder("out.txt"),
+                                getPathFromResourceFolder("out-actual.txt")));
 
         StreamGobbler streamGobbler =
             new StreamGobbler(process.getInputStream(), System.out::println);
