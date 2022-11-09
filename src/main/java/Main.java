@@ -51,7 +51,7 @@ public class Main {
 
     private static InputStream createInput() throws IOException {
         if (DEBUG) {
-            return Files.newInputStream(Paths.get("/Users/mstepan/repo/uva-online-judge/src/main/java/in.txt"));
+            return Files.newInputStream(Paths.get( Main.class.getResource("in.txt").getPath()));
         }
         return System.in;
     }
@@ -59,7 +59,7 @@ public class Main {
     private static PrintStream createOutput() throws IOException {
         if (DEBUG) {
             return new PrintStream(Files.newOutputStream(
-                Paths.get("/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt")));
+                Paths.get( Main.class.getResource("out-actual.txt").getPath())));
         }
         return System.out;
     }
@@ -72,8 +72,8 @@ public class Main {
 
         Process process = Runtime.getRuntime()
             .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                          "/Users/mstepan/repo/uva-online-judge/src/main/java/out.txt",
-                                          "/Users/mstepan/repo/uva-online-judge/src/main/java/out-actual.txt"));
+                                          Main.class.getResource("out.txt").getPath(),
+                                          Main.class.getResource("out-actual.txt").getPath()));
 
         StreamGobbler streamGobbler =
             new StreamGobbler(process.getInputStream(), System.out::println);
