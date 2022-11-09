@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -49,17 +50,32 @@ public class Main {
 
     private static boolean DEBUG;
 
+    private static final String DIFF_TOOL = "/usr/bin/diff";
+
+    public static void main(String[] args) {
+        try {
+            DEBUG = (args.length == 1);
+            mainLogic();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static String getPathFromResourceFolder(String filePath) {
+        return Objects.requireNonNull(MethodHandles.lookup().lookupClass().getResource(filePath)).getPath();
+    }
+
     private static InputStream createInput() throws IOException {
         if (DEBUG) {
-            return Files.newInputStream(Paths.get(Objects.requireNonNull(Main.class.getResource("in.txt")).getPath()));
+            return Files.newInputStream(Paths.get(getPathFromResourceFolder("in.txt")));
         }
         return System.in;
     }
 
     private static PrintStream createOutput() throws IOException {
         if (DEBUG) {
-            return new PrintStream(Files.newOutputStream(
-                Paths.get(Objects.requireNonNull(Main.class.getResource("out-actual.txt")).getPath())));
+            return new PrintStream(Files.newOutputStream(Paths.get(getPathFromResourceFolder("out-actual.txt"))));
         }
         return System.out;
     }
@@ -70,9 +86,8 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-            .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                          Objects.requireNonNull(Main.class.getResource("out.txt")).getPath(),
-                                          Objects.requireNonNull(Main.class.getResource("out-actual.txt")).getPath()));
+            .exec(java.lang.String.format("%s %s %s", DIFF_TOOL, getPathFromResourceFolder("out.txt"),
+                                          getPathFromResourceFolder("out-actual.txt")));
 
         StreamGobbler streamGobbler =
             new StreamGobbler(process.getInputStream(), System.out::println);
@@ -82,16 +97,6 @@ public class Main {
         th.join();
 
         process.waitFor();
-    }
-
-    public static void main(String[] args) {
-        try {
-            DEBUG = (args.length == 1);
-            mainLogic();
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     private static class StreamGobbler implements Runnable {
