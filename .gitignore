@@ -5,7 +5,7 @@ target
 .idea
 *.iml
 
-# Ignore changes in all input/output files 
+# Ignore changes in all input/output files
 src/main/resources/in.txt
 src/main/resources/out.txt
 src/main/resources/out-actual.txt
