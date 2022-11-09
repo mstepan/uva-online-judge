@@ -8,19 +8,14 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 /**
- * <Title>
- * <p>
- * https://vjudge.net/problem/UVA-xxx
+ * <a href="https://vjudge.net/problem/UVA-xxx">UVA-xxx</a>
  */
 public class Main {
 
     private Main() throws IOException, InterruptedException {
 
-
-        InputStream in = createInput();
-        PrintStream out = createOutput();
-
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+        try (PrintStream out = createOutput();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(createInput()))) {
 
             int testCases = Integer.parseInt(reader.readLine().trim());
 
@@ -102,9 +97,9 @@ public class Main {
 
     private static class StreamGobbler implements Runnable {
 
-        private InputStream inputStream;
+        private final InputStream inputStream;
 
-        private Consumer<String> consumer;
+        private final Consumer<String> consumer;
 
 
         StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
