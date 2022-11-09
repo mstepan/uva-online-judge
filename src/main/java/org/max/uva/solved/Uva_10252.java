@@ -1,3 +1,5 @@
+package org.max.uva.solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +11,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * <a href="https://vjudge.net/problem/UVA-xxx">UVA-xxx</a>
+ * <a href="https://vjudge.net/problem/UVA-10252">UVA-10252</a>
  */
-public class Main {
+public class Uva_10252 {
 
     private static void mainLogic() throws IOException, InterruptedException {
 
@@ -19,12 +21,49 @@ public class Main {
              BufferedReader reader = new BufferedReader(new InputStreamReader(createInput()))) {
 
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                out.println(line);
+                String second = reader.readLine();
+                out.println(findCommonChars(line, second));
             }
 
             diff();
         }
     }
+
+    private static String findCommonChars(String first, String second) {
+
+        int[] freq1 = gatherCharsFreq(first);
+        int[] freq2 = gatherCharsFreq(second);
+
+        return combineCommonChars(freq1, freq2);
+    }
+
+
+    private static int[] gatherCharsFreq(String str) {
+        int[] freq = new int['z' - 'a' + 1];
+        for (int i = 0; i < str.length(); ++i) {
+            freq[str.charAt(i) - 'a'] += 1;
+        }
+        return freq;
+    }
+
+    private static String combineCommonChars(int[] freq1, int[] freq2) {
+        StringBuilder res = new StringBuilder();
+
+        for (int i = 0; i < freq1.length && i < freq2.length; ++i) {
+            int curCount = Math.min(freq1[i], freq2[i]);
+
+            if (curCount > 0) {
+                char curCh = (char) ('a' + i);
+                while (curCount > 0) {
+                    res.append(curCh);
+                    --curCount;
+                }
+            }
+        }
+
+        return res.toString();
+    }
+
 
     //------------------------------------------------------------------------------------------------------------------
     // UTILS
@@ -51,7 +90,7 @@ public class Main {
 
     private static InputStream createInput() throws IOException {
         if (DEBUG) {
-            return Files.newInputStream(Paths.get(Objects.requireNonNull(Main.class.getResource("in.txt")).getPath()));
+            return Files.newInputStream(Paths.get(Objects.requireNonNull(Uva_10252.class.getResource("in.txt")).getPath()));
         }
         return System.in;
     }
@@ -59,7 +98,7 @@ public class Main {
     private static PrintStream createOutput() throws IOException {
         if (DEBUG) {
             return new PrintStream(Files.newOutputStream(
-                Paths.get(Objects.requireNonNull(Main.class.getResource("out-actual.txt")).getPath())));
+                Paths.get(Objects.requireNonNull(Uva_10252.class.getResource("out-actual.txt")).getPath())));
         }
         return System.out;
     }
@@ -70,9 +109,9 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-            .exec(java.lang.String.format("/usr/bin/diff %s %s",
-                                          Objects.requireNonNull(Main.class.getResource("out.txt")).getPath(),
-                                          Objects.requireNonNull(Main.class.getResource("out-actual.txt")).getPath()));
+            .exec(String.format("/usr/bin/diff %s %s",
+                                Objects.requireNonNull(Uva_10252.class.getResource("out.txt")).getPath(),
+                                Objects.requireNonNull(Uva_10252.class.getResource("out-actual.txt")).getPath()));
 
         StreamGobbler streamGobbler =
             new StreamGobbler(process.getInputStream(), System.out::println);
