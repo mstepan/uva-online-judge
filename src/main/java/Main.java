@@ -6,30 +6,110 @@ import java.io.PrintStream;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 /**
- * <a href="https://vjudge.net/problem/UVA-325">UVA-325</a>
+ * <a href="https://vjudge.net/problem/UVA-941">UVA-941: Permutations</a>
  */
 public class Main {
 
-    private static final Pattern FLOAT_NUMBER_PATTERN = Pattern.compile("^[+-]?(\\d+\\.\\d+([e|E][+-]?\\d+)?|(\\d+[e|E][+-]?\\d+))$");
 
     private static void mainLogic() throws IOException, InterruptedException {
-
         try (PrintStream out = createOutput();
              BufferedReader reader = new BufferedReader(new InputStreamReader(createInput()))) {
 
-            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+            int samplesCount = Integer.parseInt(reader.readLine().trim());
 
-                out.println(line);
+            for (int i = 0; i < samplesCount; ++i) {
+                String str = reader.readLine().trim();
+                long permutationIndex = Long.parseLong(reader.readLine().trim());
+
+                String permutationByIndex = findNthPermutation(str, permutationIndex);
+
+                out.println(permutationByIndex);
             }
+
 
             diff();
         }
     }
+
+    /**
+     * Use factorial number system to find n-th permutation.
+     * See: https://www.quora.com/How-can-I-mathematically-get-n-th-lexicographic-permutation-of-a-set-without-actually
+     * -writing-them-out
+     * See: https://en.wikipedia.org/wiki/Factorial_number_system
+     */
+    private static String findNthPermutation(String str, long permutationIndex) {
+
+        final char[] strArr = str.toCharArray();
+        Arrays.sort(strArr);
+
+        StringBuilder res = new StringBuilder(strArr.length);
+        CharArrayWithUsed arr = new CharArrayWithUsed(strArr);
+
+        long leftPermIndex = permutationIndex;
+
+        for (int facIndex = str.length() - 1; facIndex > 0; --facIndex) {
+            long facValue = fac(facIndex);
+
+            if (facValue <= leftPermIndex) {
+                int elemIndex = (int) (leftPermIndex / facValue);
+
+                char ch = arr.useAtIndex(elemIndex);
+                res.append(ch);
+
+                leftPermIndex -= (elemIndex * facValue);
+            }
+            else {
+                res.append(arr.useAtIndex(0));
+            }
+        }
+
+        res.append(arr.useAtIndex(0));
+
+        return res.toString();
+    }
+
+    private static class CharArrayWithUsed {
+        final char[] arr;
+        final boolean[] used;
+
+        CharArrayWithUsed(char[] arr) {
+            this.arr = arr;
+            this.used = new boolean[arr.length];
+        }
+
+        public char useAtIndex(int elemIndex) {
+            for (int i = 0, curIndex = 0; i < arr.length; ++i) {
+                if (!used[i]) {
+                    if (curIndex == elemIndex) {
+                        used[i] = true;
+                        return arr[i];
+                    }
+                    ++curIndex;
+                }
+            }
+
+            throw new IllegalArgumentException("All elements used");
+        }
+    }
+
+    private static long fac(int value) {
+
+        assert value <= 20 : "value is too big to calculate factorial using 'long' as a type";
+
+        long res = 1L;
+
+        for (long i = 2L; i <= value; ++i) {
+            res *= i;
+        }
+
+        return res;
+    }
+
 
     //------------------------------------------------------------------------------------------------------------------
     // UTILS
