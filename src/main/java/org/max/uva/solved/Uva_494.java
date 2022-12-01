@@ -1,3 +1,5 @@
+package org.max.uva.solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,24 +10,33 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * <a href="https://vjudge.net/problem/UVA-xxx">UVA-xxx: Title here</a>
+ * <a href="https://vjudge.net/problem/UVA-494">UVA-494: Kindergarten Counting Game</a>
  */
-public class Main {
+public class Uva_494 {
+
+
+    private static final Pattern WORD_REGEXP = Pattern.compile("\\s+");
 
     private static void mainLogic() throws IOException, InterruptedException {
         try (PrintStream out = createOutput();
              BufferedReader reader = new BufferedReader(new InputStreamReader(createInput()))) {
 
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                out.println(line);
+                out.println(countWords(line));
             }
 
             diff();
         }
     }
+
+    private static int countWords(String line) {
+        String cleanedLine = line.replaceAll("[^a-zA-Z]+", " ").trim();
+        return WORD_REGEXP.split(cleanedLine).length;
+    }
+
 
     //------------------------------------------------------------------------------------------------------------------
     // UTILS
@@ -86,11 +97,11 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(java.lang.String.format("%s %s %s", DIFF_TOOL, getPathFromResourceFolder("out.txt"),
-                                              getPathFromResourceFolder("out-actual.txt")));
+            .exec(String.format("%s %s %s", DIFF_TOOL, getPathFromResourceFolder("out.txt"),
+                                getPathFromResourceFolder("out-actual.txt")));
 
         StreamGobbler streamGobbler =
-                new StreamGobbler(process.getInputStream(), System.out::println);
+            new StreamGobbler(process.getInputStream(), System.out::println);
 
         Thread th = new Thread(streamGobbler);
         th.start();

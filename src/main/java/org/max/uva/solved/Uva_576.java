@@ -1,3 +1,5 @@
+package org.max.uva.solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,23 +11,72 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * <a href="https://vjudge.net/problem/UVA-xxx">UVA-xxx: Title here</a>
+ * <a href="https://vjudge.net/problem/UVA-576">UVA-576: Haiku Review</a>
  */
-public class Main {
+public class Uva_576 {
+
+    private static final Pattern SYLLABLE_REGEXP = Pattern.compile("([^aeiouy]*[aeiouy]+[^aeiouy]*)");
+
+    private static final int[] EXPECTED_SYLLABLES_COUNT = {5, 7, 5};
 
     private static void mainLogic() throws IOException, InterruptedException {
         try (PrintStream out = createOutput();
              BufferedReader reader = new BufferedReader(new InputStreamReader(createInput()))) {
 
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                out.println(line);
+
+                if("e/o/i".equals(line)){
+                    break;
+                }
+
+                String[] sentences = line.split("/");
+
+                int index = 0;
+                for (; index < sentences.length; ++index) {
+                    int actualCount = countSyllablesInSentence(sentences[index]);
+                    if (actualCount != EXPECTED_SYLLABLES_COUNT[index]) {
+                        out.println(index + 1);
+                        break;
+                    }
+                }
+
+                if (index == sentences.length) {
+                    out.println("Y");
+                }
             }
 
             diff();
         }
     }
+
+    private static int countSyllablesInSentence(String str) {
+
+        String[] words = str.split(" ");
+
+        int cnt = 0;
+
+        for (String singleWord : words) {
+            cnt += countSyllablesInWord(singleWord);
+        }
+
+        return cnt;
+    }
+
+    private static int countSyllablesInWord(String word) {
+        Matcher matcher = SYLLABLE_REGEXP.matcher(word);
+
+        int cnt = 0;
+
+        while (matcher.find()) {
+            ++cnt;
+        }
+
+        return cnt;
+    }
+
 
     //------------------------------------------------------------------------------------------------------------------
     // UTILS
@@ -86,8 +137,8 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(java.lang.String.format("%s %s %s", DIFF_TOOL, getPathFromResourceFolder("out.txt"),
-                                              getPathFromResourceFolder("out-actual.txt")));
+                .exec(String.format("%s %s %s", DIFF_TOOL, getPathFromResourceFolder("out.txt"),
+                                    getPathFromResourceFolder("out-actual.txt")));
 
         StreamGobbler streamGobbler =
                 new StreamGobbler(process.getInputStream(), System.out::println);
