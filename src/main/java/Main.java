@@ -8,10 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
 
 /**
- * <a href="https://vjudge.net/problem/UVA-xxx">UVA-xxx: Title here</a>
+ * <a href="https://vjudge.net/problem/UVA-xxx">UVA-xxxx: Title </a>
  */
 public class Main {
 
@@ -19,7 +18,9 @@ public class Main {
         try (PrintStream out = createOutput();
              BufferedReader reader = new BufferedReader(new InputStreamReader(createInput()))) {
 
-            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+            String line;
+
+            while( (line = reader.readLine()) != null){
                 out.println(line);
             }
 
@@ -87,7 +88,7 @@ public class Main {
 
         Process process = Runtime.getRuntime()
                 .exec(java.lang.String.format("%s %s %s", DIFF_TOOL, getPathFromResourceFolder("out.txt"),
-                                              getPathFromResourceFolder("out-actual.txt")));
+                        getPathFromResourceFolder("out-actual.txt")));
 
         StreamGobbler streamGobbler =
                 new StreamGobbler(process.getInputStream(), System.out::println);
