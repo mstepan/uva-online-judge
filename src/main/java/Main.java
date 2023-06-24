@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * <a href="https://vjudge.net/problem/UVA-11173">UVA-11173: Grey Codes</a>
+ * <a href="https://vjudge.net/problem/UVA-xxx">UVA-xxx: Title</a>
  */
 public class Main {
 
@@ -18,40 +18,14 @@ public class Main {
         try (PrintStream out = createOutput();
              BufferedReader reader = new BufferedReader(new InputStreamReader(createInput()))) {
 
-            int testCases = Integer.parseInt(reader.readLine().trim());
+            String line;
 
-            for(int testIdx = 0; testIdx < testCases; ++testIdx){
-                String[] bitsAndIndexParts = reader.readLine().split("\\s+");
-
-                int bitsCount = Integer.parseInt(bitsAndIndexParts[0]);
-                int index = Integer.parseInt(bitsAndIndexParts[1]);
-
-                int grayCode = binaryToGray(bitsCount, index);
-
-                out.println(grayCode);
+            while( (line = reader.readLine()) != null){
+                out.println(line);
             }
 
             diff();
         }
-    }
-
-    /**
-     * Convert binary value to Gray code value.
-     */
-    public static int binaryToGray(int bitsCount, int value) {
-
-        int grayCode = value;
-
-        for (int div = 2; div < (1 << bitsCount); div <<= 1) {
-            int chunkIdx = value / div;
-
-            // odd case, flit bit
-            if ((chunkIdx & 1) != 0) {
-                grayCode ^= (div >> 1);
-            }
-        }
-
-        return grayCode;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -113,7 +87,7 @@ public class Main {
         }
 
         Process process = Runtime.getRuntime()
-                .exec(String.format("%s %s %s", DIFF_TOOL, getPathFromResourceFolder("out.txt"),
+                .exec(java.lang.String.format("%s %s %s", DIFF_TOOL, getPathFromResourceFolder("out.txt"),
                         getPathFromResourceFolder("out-actual.txt")));
 
         StreamGobbler streamGobbler =
