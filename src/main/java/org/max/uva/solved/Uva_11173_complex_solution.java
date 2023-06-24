@@ -1,3 +1,5 @@
+package org.max.uva.solved;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * <a href="https://vjudge.net/problem/UVA-11173">UVA-11173: Grey Codes</a>
  */
-public class Main {
+public class Uva_11173_complex_solution {
 
     private static void mainLogic() throws IOException, InterruptedException {
         try (PrintStream out = createOutput();
